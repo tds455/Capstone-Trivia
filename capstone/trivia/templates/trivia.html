@@ -3,7 +3,91 @@
 {% block body %}
 
 <div id="defaultview">
-dasdas
+    <div class="container h-50">
+    <form>
+        <div class="card-deck mb-3 text-center">
+            <div class="card text-white bg-primary mb-3 mt-5" style="max-width: 18rem;">
+                <div class="card-header">Art questions</div>
+                <div class="card-body">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="artradio1" id="artradio1">
+                    <label class="form-check-label" for="artradio1">Enable</label> </div>
+                </div>
+              </div>
+              <div class="card text-white bg-danger mb-3 mt-5" style="max-width: 18rem;">
+                <div class="card-header">Music questions</div>
+                <div class="card-body">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="musicradio1" id="musicradio1">
+                    <label class="form-check-label" for="musicradio1">Enable</label> </div>
+                </div>
+              </div>
+              <div class="card text-white bg-info mb-3 mt-5" style="max-width: 18rem;">
+                <div class="card-header">History questions</div>
+                <div class="card-body">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="historyradio1" id="historyradio1">
+                    <label class="form-check-label" for="historyradio1">Enable</label> </div>
+                </div>
+              </div>
+              <div class="card text-white bg-secondary mb-3 mt-5" style="max-width: 18rem;">
+                <div class="card-header">Sports questions</div>
+                <div class="card-body">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="sportsradio1" id="sportsradio1">
+                    <label class="form-check-label" for="sportsradio1">Enable</label> </div>
+                </div>
+              </div>
+              <div class="card text-white bg-success mb-3 mt-5" style="max-width: 18rem;">
+                <div class="card-header">Science questions</div>
+                <div class="card-body">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="scienceradio1" id="scienceradio1">
+                    <label class="form-check-label" for="scienceradio1">Enable</label> </div>
+                </div>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-lg-6">
+            <div class="card h-100 border-dark">
+                <div class="card-body">
+                <h5 class="card-title">Choose amount of questions</h5>
+                    <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionsno" id="6questions">
+                    <label class="form-check-label" for="6questions">
+                      6 questions
+                    </label>
+                    </div>
+                    <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionsno" id="9questions">
+                    <label class="form-check-label" for="9questions">
+                      9 questions
+                    </label>
+                    </div>
+                    <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionsno" id="12questions">
+                    <label class="form-check-label" for="12questions">
+                      12 questions
+                    </label>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-sm-6 col-lg-6">
+            <div class="card border-dark h-100 text-center float-right w-75">
+                <div class="card-body">
+                <h5 class="card-title">Ready to begin?</h5>
+                <button type="button" id="triviaform" class="btn btn-outline-dark">Start round</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </form>
+    </div>      
+</div>
+
+<div id="quizview">
+    <h1>test complete!</h1>
 </div>
 
 {% endblock %}
