@@ -12,6 +12,9 @@ def index(request):
     # Return the front page
     return render(request, "index.html")
 
+def triviagame(request):
+    return render(request, "trivia.html")
+
 def register(request):
     if request.method == "GET":
 
