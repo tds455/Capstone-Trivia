@@ -18,5 +18,12 @@ function quizview() {
 }
 
 function apitest() {
-
+    console.log("success")
+    body = "testing"
+    fetch('/createquestions', {
+        method: 'POST',
+        body: JSON.stringify({
+            body: body
+        })
+    })
 }
