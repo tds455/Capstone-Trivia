@@ -5,6 +5,7 @@ import json
 from django.urls import reverse
 from .models import User
 from django.contrib.auth import authenticate, login, logout
+import requests
 
 # Create your views here.
 def index(request):
