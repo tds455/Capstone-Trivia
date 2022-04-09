@@ -10,3 +10,13 @@ def index(request):
 
 def test(request):
     return HttpResponse("fdfdsfsdfsdfsdf")
+
+def register(request):
+    if request.method == "GET":
+        return render(request, "register.html")
+
+def login(request):
+    pass
+
+def logout(request):
+    pass
