@@ -1,2 +1,40 @@
 {% extends "layout.html" %}
 
+{% block body %}
+<div class="container">
+<div class="card-deck mb-3 text-center">
+    <div class="card box-shadow mt-5">
+        <div class="card-header">
+            <h1>Play Trivia</h1>
+        </div>
+        <div class="card-body">
+            <h1>Hello</h1>
+        </div>
+    </div>
+    <div class="card box-shadow mt-5">
+        <div class="card-header">
+            <h1>Manage account</h1>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                <li>Check your scores</li>
+                <li>Update your information</li>
+                <li><button class="btn btn-secondary" action="{% url 'index' %}">Click here</button></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card box-shadow mt-5">
+        <div class="card-header">
+            <h1>Give feedback</h1>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                <li>Report bugs</li>
+                <li>Let me know what you think!</li>
+                <li><button class="btn btn-secondary" action="{% url 'index' %}">Click here</button></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
