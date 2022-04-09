@@ -4,16 +4,22 @@
 
 {% block body %}
 
+
 <div class="container text-center">
     <div class="card box-shadow mt-5">
         <div class="card-header">
             <h1>Create a new account</h1>
         </div>
         <div class="card-body">
-            <form>
+            {% if user.is_authenticated %}
+            <button class="btn-lg btn-outline-dark mr-1" action="{% url 'logout' %}" type="button" id="singleplayer">You are already logged in.  Click here to log out</button>
+            {% else %}
+            <form action = "{% url 'register' %}" method="post" >
+                {% csrf_token %}
                 <div class="form-group">
                   <label for="registerusername">Username</label>
                   <input type="username" class="form-control" id="registerusernameinput" placeholder="Username">
+                  <small id="usererror" class="form-text text-muted">{{error}}</small>
                 </div>
                 <div class="form-group">
                   <label for="registerpassword">Password</label>
@@ -23,6 +29,7 @@
                 </div>
                 <button type="submit" class="btn btn-outline-dark">Submit</button>
               </form>
+              {% endif %}
         </div>
 </div>
 {% endblock %}
