@@ -7,4 +7,5 @@ class User(AbstractUser):
 
 class Userstats(models.Model):
     userid = models.IntegerField()
-    
+    score = models.IntegerField()
+    gamesplayed = models.IntegerField()

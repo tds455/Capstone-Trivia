@@ -12,7 +12,7 @@
         </div>
         <div class="card-body">
             {% if user.is_authenticated %}
-            <button class="btn-lg btn-outline-dark mr-1" action="{% url 'logout' %}" type="button" id="singleplayer">You are already logged in.  Click here to log out</button>
+            <button class="btn-lg btn-outline-dark mr-1" action="{% url 'logoutview' %}" type="button" id="singleplayer">You are already logged in.  Click here to log out</button>
             {% else %}
             <form action = "{% url 'register' %}" method="post" >
                 {% csrf_token %}
@@ -32,5 +32,6 @@
               </form>
               {% endif %}
         </div>
+    </div>
 </div>
 {% endblock %}

@@ -11,13 +11,9 @@ def index(request):
     # Return the front page
     return render(request, "index.html")
 
-
-def test(request):
-    return HttpResponse("fdfdsfsdfsdfsdf")
-
 def register(request):
     if request.method == "GET":
-        
+
         return render(request, "register.html")
 
     if request.method == "POST":
@@ -40,12 +36,27 @@ def register(request):
         except:
             return render(request, "register.html", {"error": "Username already taken"})
         else:
-            login(user)
+            login(request, user)
             return HttpResponseRedirect(reverse("index"))
 
+def loginview(request):
+    if request.method == "GET":
+        return render(request, "login.html")
 
-def login(request):
-    pass
+    if request.method == "POST":
+        # Attempt to sign user in
+        username = request.POST["loginusername"]
+        password = request.POST["loginpw"]
+        user = authenticate(request, username=username, password=password)      
 
-def logout(request):
-    pass
+        # Check if authentication was successful and if so, log in the current user
+        if user is not None:
+            login(request, login)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "login.html", {"error": "Invalid username or password"})
+
+def logoutview(request):
+    #Logout the current user
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
