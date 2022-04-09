@@ -18,12 +18,13 @@
                 {% csrf_token %}
                 <div class="form-group">
                   <label for="registerusername">Username</label>
-                  <input type="username" class="form-control" id="registerusernameinput" placeholder="Username">
-                  <small id="usererror" class="form-text text-muted">{{error}}</small>
+                  <input type="username" name="username" class="form-control" id="registerusernameinput" placeholder="Username">
+                  <small id="usererror" class="form-text text-danger">{{error}}</small>
                 </div>
                 <div class="form-group">
                   <label for="registerpassword">Password</label>
-                  <input type="password" class="form-control" id="registerpasswordinput" placeholder="Password">
+                  <input type="password" name="pw" class="form-control" id="registerpasswordinput" placeholder="Password">
+                  <input type="password" name="pwverify" class="form-control mt-4" id="registerpasswordinputverify" placeholder="Verify Password">
                   <small id="pwHelp1" class="form-text text-muted">This project is under development!</small>
                   <small id="pwHelp2" class="form-text text-muted">While passwords are stored securely, I recommend against reusing details</small>
                 </div>
