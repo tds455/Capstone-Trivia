@@ -10,3 +10,12 @@ def index(request):
 
 def test(request):
     return HttpResponse("fdfdsfsdfsdfsdf")
+
+def register(request):
+    pass
+
+def login(request):
+    pass
+
+def logout(request):
+    pass

@@ -11,6 +11,27 @@
         {% endblock %}
     </head>
     <body>
-
-        <nav></nav>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'index' %}">Home<span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                {% if user.is_authenticated %}
+                <ul class="nav justify-content-end">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Link</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Link</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Link</a>
+                  </li>
+                </ul>
+                {% endif %}
+                     
+        </nav>
     </body>
