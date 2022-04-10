@@ -55,7 +55,8 @@ def createquestions(request):
                     question = sportsquestion.createquestion()
                     contentcheck = sportsquestion.checkvalid(question)
                 question = sportsquestion.format(question, x)
-                
+                questions.append(question)
+
         print(questions)
         return JsonResponse(questions, safe=False)
 
@@ -112,7 +113,7 @@ def logoutview(request):
 class artworkquestion:
     
     def createquestion():
-        # Select a random number from 0 to 90000 
+        # Select a random number from 0 to (max)90000 
         artid = randrange(1, 90000)
         # Enter id into api call
         url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
@@ -123,11 +124,11 @@ class artworkquestion:
     def checkvalid(json):
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
-            artworkid = (json["data"]["id"])
+            datestart = json["data"]["date_start"]
         except:
             return 0
         else:
-            if json["data"]["date_start"] != json["data"]["date_end"]:
+            if datestart != json["data"]["date_end"]:
                 return 0
             else:
                 return 1
@@ -139,6 +140,7 @@ class artworkquestion:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 1,
                 "title" : json["data"]["title"],
                 "year": json["data"]["date_start"],
@@ -151,6 +153,7 @@ class artworkquestion:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 2,
                 "title" : json["data"]["title"],
                 "year": json["data"]["date_start"],
@@ -163,6 +166,7 @@ class artworkquestion:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 3,
                 "title" : json["data"]["title"],
                 "country": json["data"]["place_of_origin"],
@@ -182,8 +186,8 @@ class artworkquestion:
 class sportsquestion:
 
     def createquestion():
-        # Select a random number from 0 to 90000 
-        sportid = randrange(1, 1000)
+        # Select a random number from 0 to (max)1000  
+        sportid = randrange(1, 200)
         # Enter id into api call
         url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
         response = requests.get(url)
@@ -205,14 +209,22 @@ class sportsquestion:
 
     def format(json, id):
         choice = randrange(1, 3)
+
+        # Strip any instances of the sport name in the description
+        description = str(json["data"]["attributes"]["description"])
+        title = str(json["data"]["attributes"]["name"])
+        description = description.replace(title, "SPORT")
+        description = description.replace(title.lower(), "SPORT")
+
         if choice == 1:
             question = {
                 "number": id,
+                "category": "sports",
                 "url": json["data"]["attributes"]["icon"],
                 "type": 1,
-                "title" : json["data"]["attributes"]["name"],
-                "description" : json["data"]["attributes"]["description"],
-                "question" : "What is the name of this sport?",
+                "title" : title,
+                "description" : description,
+                "question" : "Based on the picture, what is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
             return question
@@ -220,10 +232,11 @@ class sportsquestion:
         if choice == 2:
             question = {
                 "number": id,
+                "category": "sports",
                 "url": json["data"]["attributes"]["icon"],
-                "type": 1,
-                "title" : json["data"]["attributes"]["name"],
-                "description" : json["data"]["attributes"]["description"],
+                "type": 2,
+                "title" : title,
+                "description" : description,
                 "question" : "Based on the description, what is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
