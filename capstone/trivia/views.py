@@ -11,7 +11,7 @@ import requests
 from random import seed, random, randrange
 
 # Seed RNG
-seed(1)
+seed()
 
 # Create your views here.
 def index(request):
@@ -27,18 +27,16 @@ def createquestions(request):
     if request.method == "POST":
 
         # Validate json is valid
+        # Note - find a better way to write this
         contentcheck = 0
         while contentcheck == 0:
             json = artworkquestion.createquestion()
             contentcheck = artworkquestion.checkvalid(json)
-        print(json)
 
         # Parse question from API response
         question = artworkquestion.format(json)
-        print(question)
 
         url = artworkquestion.createurl(json)
-        print(url)
 
         return JsonResponse(json, safe=False)
 
