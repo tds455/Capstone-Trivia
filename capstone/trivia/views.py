@@ -135,6 +135,6 @@ class artworkquestion:
     def createurl(json):
         iiif = json["config"]["iiif_url"]
         imageid = json["data"]["image_id"]
-        suffix = "/full/200,/0/default.jpg"
+        suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url
