@@ -35,8 +35,10 @@ def createquestions(request):
 
         # Parse question from API response
         question = artworkquestion.format(json)
+        print(question)
 
         url = artworkquestion.createurl(json)
+        print(url)
 
         return JsonResponse(json, safe=False)
 
