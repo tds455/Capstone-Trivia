@@ -215,7 +215,6 @@ class sportsquestion:
                 "question" : "What is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
-            print(question)
             return question
 
         if choice == 2:
@@ -228,7 +227,6 @@ class sportsquestion:
                 "question" : "Based on the description, what is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
-            print(question)
             return question
 
     
