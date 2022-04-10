@@ -8,10 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import requests
-from random import seed, random, randrange
+from random import seed, random, randrange, randint
 
 # Seed RNG
-seed(1)
+seed()
 
 # Create your views here.
 def index(request):
@@ -26,21 +26,30 @@ def triviagame(request):
 def createquestions(request):
     if request.method == "POST":
 
-        # Validate json is valid
-        contentcheck = 0
-        while contentcheck == 0:
-            json = artworkquestion.createquestion()
-            contentcheck = artworkquestion.checkvalid(json)
-        print(json)
+        # Parse POST data
+        data = json.loads(request.body)
+        topics = data["topics"]
+        totalqs = data["totalqs"]
+        totalqs = int(totalqs)
 
-        # Parse question from API response
-        question = artworkquestion.format(json)
-        print(question)
+        # Create list of questions, looping for total number of questions 
+        # and picking a selected category at random each time
 
-        url = artworkquestion.createurl(json)
-        print(url)
+        questions = []
 
-        return JsonResponse(json, safe=False)
+        for x in range(totalqs):
+            i = randrange(0, len(topics))
+            if topics[i] == "Art":
+                contentcheck = 0
+                while contentcheck == 0:
+                    question = artworkquestion.createquestion()
+                    contentcheck = artworkquestion.checkvalid(question)
+                question = artworkquestion.format(question, x)
+                print(question)
+                questions.append(question)
+                
+        print(questions)
+        return JsonResponse(questions, safe=False)
 
 def register(request):
     if request.method == "GET":
@@ -115,26 +124,49 @@ class artworkquestion:
             else:
                 return 1
 
-    def format(json):
-        choice = randrange(1, 3)
+    def format(json, id):
+        url = artworkquestion.createurl(json)
+        choice = randrange(1, 4)
         if choice == 1:
             question = {
-                "artist": json["data"]["artist_title"]
+                "number": id,
+                "url": url,
+                "type": 1,
+                "title" : json["data"]["title"],
+                "year": json["data"]["date_start"],
+                "country": json["data"]["place_of_origin"],
+                "question" : "Which artist painted this artwork",
+                "answer": json["data"]["artist_title"]
             }
             return question
         if choice == 2:
             question = {
-                "country": json["data"]["place_of_origin"]
+                "number": id,
+                "url": url,
+                "type": 2,
+                "title" : json["data"]["title"],
+                "year": json["data"]["date_start"],
+                "artist": json["data"]["artist_title"],
+                "question": "Which country is this artwork from",
+                "answer": json["data"]["place_of_origin"]
             }
             return question
         if choice == 3:
             question = {
-                "year": json["data"]["date_start"]
+                "number": id,
+                "url": url,
+                "type": 3,
+                "title" : json["data"]["title"],
+                "country": json["data"]["place_of_origin"],
+                "artist": json["data"]["artist_title"],
+                "question": "In which year was this artwork painted",
+                "answer": json["data"]["date_start"]
             }
+            return question
 
     def createurl(json):
         iiif = json["config"]["iiif_url"]
         imageid = json["data"]["image_id"]
-        suffix = "/full/200,/0/default.jpg"
+        suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url

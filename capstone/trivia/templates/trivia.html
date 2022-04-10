@@ -4,7 +4,7 @@
 
 <div id="defaultview">
     <div class="container h-50">
-    <form>
+    <form id="triviadata">
         <div class="card-deck mb-3 text-center">
             <div class="card text-white bg-primary mb-3 mt-5" style="max-width: 18rem;">
                 <div class="card-header">Art questions</div>
@@ -77,7 +77,7 @@
             <div class="card border-dark h-100 text-center float-right w-75">
                 <div class="card-body">
                 <h5 class="card-title">Ready to begin?</h5>
-                <button type="button" id="triviaform" class="btn btn-outline-dark">Start round</button>
+                <button type="button" id="triviasubmit" class="btn btn-outline-dark">Start round</button>
                 </div>
             </div>
             </div>
@@ -86,10 +86,27 @@
     </div>      
 </div>
 
+<div class="container-fluid">
+<form id="quizviewform">
 <div id="quizview">
-    <button id="triviasubmit">Test API</button>
+
+</div>
+</form>
 </div>
 
+<div id="resultsview">
+
+</div>
+
+<div id="loadingview">
+  <div class="container">
+    <div class="header mt-5 text-center">
+        <h1>Loading</h1>
+        <p class="lead">Please wait for questions to load</p>
+    </div>
+</div>
+
+</div>
 {% endblock %}
 
 {% block script %}
