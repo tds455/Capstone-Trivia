@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     defaultview()
     });
 
-// These are currently hardcoded, but it could instead be created from form input
+// These are currently hardcoded, but they could instead be created from form input
 var alltopics = ["Art", "Music", "History", "Sports", "Science"]
 var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
@@ -18,8 +18,8 @@ function defaultview() {
 
 function quizview() {
     // Update views
-    document.querySelector('#defaultview').style.display = 'block';
-    document.querySelector('#quizview').style.display = 'none';
+    document.querySelector('#defaultview').style.display = 'none';
+    document.querySelector('#quizview').style.display = 'block';
 
     // Process form input
     let form = document.getElementById("triviadata").elements;
@@ -32,25 +32,32 @@ function quizview() {
             topics.push(alltopics[i]) 
         }
     }
-    console.log(topics)
 
     // Check selected amount of questions
+    totalqs = ""
 
     for (let i = 5; i <= questionvals.length; i++)
         if (form[i]["checked"] == true) {
             totalqs = questionvals[i]
         }
-    console.log(totalqs)
 
     // Create POST request
-    console.log("success")
-    body = "testing"
     fetch('/createquestions', {
         method: 'POST',
         body: JSON.stringify({
-            body: body
+            totalqs: totalqs,
+            topics: topics
         })
     })
+    .then(response => response.json())
+    // Take response, format each question into HTML and add to HTML div
+    .then(questions => {
+        questions.forEach(question => {
+        console.log(question);
+        element = artquestion(question);
+        document.querySelector('#quizview').appendChild(element);
+        });
+        })
 
     // Wait for response before continuing
 
@@ -59,3 +66,21 @@ function quizview() {
 
 }
 
+function artquestion(question) {
+    // Create HTML element containing question code
+    console.log("artquestion")
+    const element = document.createElement('div');
+    element.innerHTML = `
+    <div class="card border-primary mb-3 text-center" style="max-width: 18rem;">
+    <img class="card-img-top" src="${question['url']}" alt="Artwork">
+    <div class="card-body">
+    <h5 class="card-title">${question['question']}"</h5>
+    <div class="form-group">
+    <label for="answer${question['number']}">Answer</label>
+    <input type="text" class="form-control" id="answer${question['number']}">
+    </div>
+    </div>
+    </div
+    `
+     return element
+}
