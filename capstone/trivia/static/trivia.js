@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     defaultview()
     });
 
-// This is currently hardcoded, but it could instead be formed from form input
+// These are currently hardcoded, but it could instead be created from form input
 var alltopics = ["Art", "Music", "History", "Sports", "Science"]
+var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
@@ -34,7 +35,12 @@ function quizview() {
     console.log(topics)
 
     // Check selected amount of questions
-    console.log(form)
+
+    for (let i = 5; i <= questionvals.length; i++)
+        if (form[i]["checked"] == true) {
+            totalqs = questionvals[i]
+        }
+    console.log(totalqs)
 
     // Create POST request
     console.log("success")
