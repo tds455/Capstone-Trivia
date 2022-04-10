@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     defaultview()
     });
 
+// This is currently hardcoded, but it could instead be formed from form input
 var alltopics = ["Art", "Music", "History", "Sports", "Science"]
 
 function defaultview() {
@@ -33,6 +34,7 @@ function quizview() {
     console.log(topics)
 
     // Check selected amount of questions
+    console.log(form)
 
     // Create POST request
     console.log("success")
