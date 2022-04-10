@@ -4,12 +4,43 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from django.urls import reverse
 from .models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+import requests
+from random import seed, random, randrange
+
+# Seed RNG
+seed(1)
 
 # Create your views here.
 def index(request):
     # Return the front page
     return render(request, "index.html")
+
+def triviagame(request):
+    return render(request, "trivia.html")
+
+@csrf_exempt
+@login_required
+def createquestions(request):
+    if request.method == "POST":
+
+        # Validate json is valid
+        contentcheck = 0
+        while contentcheck == 0:
+            json = artworkquestion.createquestion()
+            contentcheck = artworkquestion.checkvalid(json)
+        print(json)
+
+        # Parse question from API response
+        question = artworkquestion.format(json)
+        print(question)
+
+        url = artworkquestion.createurl(json)
+        print(url)
+
+        return JsonResponse(json, safe=False)
 
 def register(request):
     if request.method == "GET":
@@ -60,3 +91,50 @@ def logoutview(request):
     #Logout the current user
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+class artworkquestion:
+    
+    def createquestion():
+        # Select a random number from 0 to 90000 
+        artid = randrange(1, 90000)
+        # Enter id into api call
+        url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def checkvalid(json):
+        #Check the returned json is valid and that the year range is a single number (for question purposes)
+        try:
+            artworkid = (json["data"]["id"])
+        except:
+            return 0
+        else:
+            if json["data"]["date_start"] != json["data"]["date_end"]:
+                return 0
+            else:
+                return 1
+
+    def format(json):
+        choice = randrange(1, 3)
+        if choice == 1:
+            question = {
+                "artist": json["data"]["artist_title"]
+            }
+            return question
+        if choice == 2:
+            question = {
+                "country": json["data"]["place_of_origin"]
+            }
+            return question
+        if choice == 3:
+            question = {
+                "year": json["data"]["date_start"]
+            }
+
+    def createurl(json):
+        iiif = json["config"]["iiif_url"]
+        imageid = json["data"]["image_id"]
+        suffix = "/full/200,/0/default.jpg"
+        url = "{0}/{1}{2}".format(iiif, imageid, suffix)
+        return url
