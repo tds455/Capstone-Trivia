@@ -61,7 +61,7 @@ function quizview() {
     .then(questions => {
         const finalelement = document.createElement('div');
         finalelement.innerHTML = `
-        <button class="btn btn-outline-dark" type="button"> Submit </button>
+        <button class="btn btn-outline-dark" id="answersubmit" type="button"> Submit </button>
         `
         document.querySelector('#quizview').appendChild(finalelement);
     })
@@ -88,5 +88,12 @@ function artquestion(question) {
     </div>
     </div
     `
-     return element
+    // element.addEventListener("click", checkanswers(questions));
+    return element
 }
+
+// function checkanswers(questions){
+//     let answers = document.getElementById("triviadata").elements;
+//     console.log(answers)
+
+// }
