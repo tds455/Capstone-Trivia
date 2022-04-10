@@ -70,15 +70,11 @@ function quizview() {
         `
         submitelement.addEventListener('click', () => checkanswers(quizquestions));
         document.querySelector('#quizview').appendChild(submitelement);
+
+        // Update HTML views
         document.querySelector('#loadingview').style.display = 'none';
         document.querySelector('#quizview').style.display = 'block';
-        // Update HTML views
     })
-    
-
-
-    // Update HTML views
-
 }
 
 function artquestion(question) {
@@ -121,7 +117,6 @@ function checkanswers(questions) {
     console.log("debugcheck")
     // Display results in HTML
     for (let i = 0; i < (results.length); i++)  {
-        console.log("debugcheck2")
         const element = document.createElement('div');
         element.innerHTML = `
         <div class="card mt-5 mb-5">
