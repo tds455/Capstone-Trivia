@@ -89,7 +89,7 @@ function artquestion(question) {
     <input type="text" class="form-control" id="answer${question['number']}">
     </div>
     </div>
-    </div
+    </div>
     `
     return element
 }
@@ -97,6 +97,9 @@ function artquestion(question) {
 function checkanswers(questions) {
     document.querySelector('#defaultview').style.display = 'none';
     document.querySelector('#quizview').style.display = 'none';
+    document.querySelector('#resultsview').style.display = 'block';
+    document.querySelector('#resultsview').innerHTML = "test";
+
     let answers = document.getElementById("quizviewform").elements;
     results = []
     score = 0
@@ -110,7 +113,25 @@ function checkanswers(questions) {
         }
     
     }
-    console.log(results)
-    console.log(score)
+    console.log("debugcheck")
+    // Display results in HTML
+    for (let i = 0; i < (results.length); i++)  {
+        console.log("debugcheck2")
+        const element = document.createElement('div');
+        element.innerHTML = `
+        <div class="card mt-5 mb-5">
+        <div class="card-header">
+        Question: ${questions[i]['question']}
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Your answer: ${answers[i]['value']}</li>
+            <li class="list-group-item">Correct answer: ${questions[i]['answer']}</li>
+            <li class="list-group-item">You were ${results[i]} !</li>
+            <li class="list-group-item">Current score: ${score}</li>
+        </ul>
+        </div>
+        `
+        document.querySelector('#resultsview').appendChild(element);
+    }
 
 }
