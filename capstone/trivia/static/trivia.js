@@ -14,12 +14,14 @@ var questionvals = ["0", "0", "0", "0", "0", "2", "9", "12"]
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
     document.querySelector('#quizview').style.display = 'none';
+    document.querySelector('#loadingview').style.display = 'none';
 }
 
 function quizview() {
     // Update views
     document.querySelector('#defaultview').style.display = 'none';
-    document.querySelector('#quizview').style.display = 'block';
+    document.querySelector('#loadingview').style.display = 'block';
+    document.querySelector('#quizview').style.display = 'none';
 
     // Process form input
     let form = document.getElementById("triviadata").elements;
@@ -68,8 +70,11 @@ function quizview() {
         `
         submitelement.addEventListener('click', () => checkanswers(quizquestions));
         document.querySelector('#quizview').appendChild(submitelement);
+        document.querySelector('#loadingview').style.display = 'none';
+        document.querySelector('#quizview').style.display = 'block';
+        // Update HTML views
     })
-    // Wait for response before continuing
+    
 
 
     // Update HTML views
@@ -97,8 +102,8 @@ function artquestion(question) {
 function checkanswers(questions) {
     document.querySelector('#defaultview').style.display = 'none';
     document.querySelector('#quizview').style.display = 'none';
+    document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#resultsview').style.display = 'block';
-    document.querySelector('#resultsview').innerHTML = "test";
 
     let answers = document.getElementById("quizviewform").elements;
     results = []
@@ -133,5 +138,6 @@ function checkanswers(questions) {
         `
         document.querySelector('#resultsview').appendChild(element);
     }
+    
 
 }
