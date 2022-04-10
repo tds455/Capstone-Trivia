@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // These are currently hardcoded, but they could instead be created from form input
 var alltopics = ["Art", "Music", "History", "Sports", "Science"]
-var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
+var questionvals = ["0", "0", "0", "0", "0", "2", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
@@ -26,6 +26,9 @@ function quizview() {
 
     // create list of selected topics
     topics = []
+
+    // create array of question info to be checked for answers later
+    quizquestions = []
 
     for (let i = 0; i < alltopics.length; i++) {
         if (form[i]["checked"] == true) {
@@ -53,17 +56,18 @@ function quizview() {
     // Take response, format each question into HTML and add to HTML div
     .then(questions => {
         questions.forEach(question => {
-        console.log(question);
+        quizquestions.push(question)
         element = artquestion(question);
         document.querySelector('#quizview').appendChild(element);
         });
         })
     .then(questions => {
-        const finalelement = document.createElement('div');
-        finalelement.innerHTML = `
+        const submitelement = document.createElement('div');
+        submitelement.innerHTML = `
         <button class="btn btn-outline-dark" id="answersubmit" type="button"> Submit </button>
         `
-        document.querySelector('#quizview').appendChild(finalelement);
+        submitelement.addEventListener('click', () => checkanswers(quizquestions));
+        document.querySelector('#quizview').appendChild(submitelement);
     })
     // Wait for response before continuing
 
@@ -74,7 +78,6 @@ function quizview() {
 
 function artquestion(question) {
     // Create HTML element containing question code
-    console.log("artquestion")
     const element = document.createElement('div');
     element.innerHTML = `
     <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
@@ -88,12 +91,26 @@ function artquestion(question) {
     </div>
     </div
     `
-    // element.addEventListener("click", checkanswers(questions));
     return element
 }
 
-// function checkanswers(questions){
-//     let answers = document.getElementById("triviadata").elements;
-//     console.log(answers)
+function checkanswers(questions) {
+    document.querySelector('#defaultview').style.display = 'none';
+    document.querySelector('#quizview').style.display = 'none';
+    let answers = document.getElementById("quizviewform").elements;
+    results = []
+    score = 0
+    for (let i = 0; i < (answers.length - 1); i++) {
+        if (answers[i]["value"] == questions[i]["answer"]) {
+            results[i] = "Correct";
+            score += 1
+        }
+        else {
+            results[i] = "Incorrect"
+        }
+    
+    }
+    console.log(results)
+    console.log(score)
 
-// }
+}
