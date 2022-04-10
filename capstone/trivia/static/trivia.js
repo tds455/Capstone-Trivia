@@ -58,7 +58,13 @@ function quizview() {
         document.querySelector('#quizview').appendChild(element);
         });
         })
-
+    .then(questions => {
+        const finalelement = document.createElement('div');
+        finalelement.innerHTML = `
+        <button class="btn btn-outline-dark" type="button"> Submit </button>
+        `
+        document.querySelector('#quizview').appendChild(finalelement);
+    })
     // Wait for response before continuing
 
 
@@ -71,7 +77,7 @@ function artquestion(question) {
     console.log("artquestion")
     const element = document.createElement('div');
     element.innerHTML = `
-    <div class="card border-primary mb-3 text-center" style="max-width: 18rem;">
+    <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
     <img class="card-img-top" src="${question['url']}" alt="Artwork">
     <div class="card-body">
     <h5 class="card-title">${question['question']}"</h5>

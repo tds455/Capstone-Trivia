@@ -126,7 +126,7 @@ class artworkquestion:
 
     def format(json, id):
         url = artworkquestion.createurl(json)
-        choice = randint(1, 3)
+        choice = randrange(1, 4)
         if choice == 1:
             question = {
                 "number": id,
@@ -162,6 +162,7 @@ class artworkquestion:
                 "question": "In which year was this artwork painted",
                 "answer": json["data"]["date_start"]
             }
+            return question
 
     def createurl(json):
         iiif = json["config"]["iiif_url"]
