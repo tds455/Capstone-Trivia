@@ -1,3 +1,5 @@
+from nturl2path import url2pathname
+from unicodedata import name
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -45,8 +47,14 @@ def createquestions(request):
                     question = artworkquestion.createquestion()
                     contentcheck = artworkquestion.checkvalid(question)
                 question = artworkquestion.format(question, x)
-                print(question)
                 questions.append(question)
+
+            if topics[i] == "Sports":
+                contentcheck = 0
+                while contentcheck == 0:
+                    question = sportsquestion.createquestion()
+                    contentcheck = sportsquestion.checkvalid(question)
+                question = sportsquestion.format(question, x)
                 
         print(questions)
         return JsonResponse(questions, safe=False)
@@ -170,3 +178,57 @@ class artworkquestion:
         suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url
+
+class sportsquestion:
+
+    def createquestion():
+        # Select a random number from 0 to 90000 
+        sportid = randrange(1, 1000)
+        # Enter id into api call
+        url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def checkvalid(json):
+        try:
+            url = json["data"]["attributes"]["icon"]
+        except:
+            return 0
+        else:
+            if url == None:
+                return 0
+            if json["data"]["attributes"]["description"] == None:
+                return 0
+            else:
+                return 1
+
+    def format(json, id):
+        choice = randrange(1, 3)
+        if choice == 1:
+            question = {
+                "number": id,
+                "url": json["data"]["attributes"]["icon"],
+                "type": 1,
+                "title" : json["data"]["attributes"]["name"],
+                "description" : json["data"]["attributes"]["description"],
+                "question" : "What is the name of this sport?",
+                "answer": json["data"]["attributes"]["name"]
+            }
+            print(question)
+            return question
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "url": json["data"]["attributes"]["icon"],
+                "type": 1,
+                "title" : json["data"]["attributes"]["name"],
+                "description" : json["data"]["attributes"]["description"],
+                "question" : "Based on the description, what is the name of this sport?",
+                "answer": json["data"]["attributes"]["name"]
+            }
+            print(question)
+            return question
+
+    
