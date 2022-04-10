@@ -57,7 +57,6 @@ def createquestions(request):
                 question = sportsquestion.format(question, x)
                 questions.append(question)
 
-        print(questions)
         return JsonResponse(questions, safe=False)
 
 def register(request):
