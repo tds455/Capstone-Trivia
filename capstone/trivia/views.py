@@ -122,17 +122,20 @@ class artworkquestion:
     
     def createquestion():
         # Select a random number from 0 to (max)90000 
-        artid = randrange(1, 2000)
+        artid = randrange(0, 90000)
         # Enter id into api call
         url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
         response = requests.get(url)
         json = response.json()
         return json
 
+
     def checkvalid(json):
+        print("checkvalid")
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
             datestart = json["data"]["date_start"]
+            print(datestart)
         except:
             return 0
         else:

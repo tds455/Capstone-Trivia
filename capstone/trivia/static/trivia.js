@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // These are currently hardcoded, but they could instead be created from form input
 var alltopics = ["Art", "Music", "World", "Sports", "Science"]
-var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
+var questionvals = ["0", "0", "0", "0", "0", "2", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
@@ -94,7 +94,7 @@ function artquestion(question) {
     <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
     <img class="card-img-top" src="${question['url']}" alt="Artwork">
     <div class="card-body">
-    <h5 class="card-title">${question['question']}"</h5>
+    <h5 class="card-title">${question['question']}</h5>
     <div class="form-group">
     <label for="answer${question['number']}">Answer</label>
     <input type="text" class="form-control" id="answer${question['number']}">
