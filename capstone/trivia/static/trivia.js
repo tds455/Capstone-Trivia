@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 // These are currently hardcoded, but they could instead be created from form input
-var alltopics = ["Art", "Music", "History", "Sports", "Science"]
-var questionvals = ["0", "0", "0", "0", "0", "2", "9", "12"]
+var alltopics = ["Art", "Animal", "World", "Sports", "Movie"]
+var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
@@ -59,7 +59,23 @@ function quizview() {
     .then(questions => {
         questions.forEach(question => {
         quizquestions.push(question)
-        element = artquestion(question);
+
+        if (question['category'] == "arts") {
+            element = artquestion(question);
+        }
+        if (question['category'] == "sports") {
+            element = sportsquestion(question);
+        }
+        if (question['category'] == "world") {
+            element = worldquestion(question);
+        }
+        if (question['category'] == "animal") {
+            element = animalquestion(question);
+        }
+        if (question['category'] == "quote") {
+            element = quotequestion(question);
+        }
+        
         document.querySelector('#quizview').appendChild(element);
         });
         })
@@ -81,10 +97,10 @@ function artquestion(question) {
     // Create HTML element containing question code
     const element = document.createElement('div');
     element.innerHTML = `
-    <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
+    <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
     <img class="card-img-top" src="${question['url']}" alt="Artwork">
     <div class="card-body">
-    <h5 class="card-title">${question['question']}"</h5>
+    <h5 class="card-title">${question['question']}</h5>
     <div class="form-group">
     <label for="answer${question['number']}">Answer</label>
     <input type="text" class="form-control" id="answer${question['number']}">
@@ -92,6 +108,173 @@ function artquestion(question) {
     </div>
     </div>
     `
+    return element
+}
+
+function sportsquestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="Artwork">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}"</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <p> Description: ${question['description']} </p>
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}"</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    return element
+}
+
+function animalquestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}</h5>
+        <p>${question['diet']}</p>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}</h5>
+        <p>${question['habitat']}</p>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "3") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}${question['location']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+
+    return element
+}
+
+function worldquestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag speaks ${question['language']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag uses the ${question['currency']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "3") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+
+    return element
+}
+
+function quotequestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">In which movie did ${question['person']} say "${question['quote']}"</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">In ${question['movie']} who said the following "${question['quote']}"</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+
     return element
 }
 
@@ -114,12 +297,11 @@ function checkanswers(questions) {
         }
     
     }
-    console.log("debugcheck")
     // Display results in HTML
     for (let i = 0; i < (results.length); i++)  {
         const element = document.createElement('div');
         element.innerHTML = `
-        <div class="card mt-5 mb-5">
+        <div class="card mt-5 mb-5 w-50">
         <div class="card-header">
         Question: ${questions[i]['question']}
         </div>
@@ -127,7 +309,6 @@ function checkanswers(questions) {
             <li class="list-group-item">Your answer: ${answers[i]['value']}</li>
             <li class="list-group-item">Correct answer: ${questions[i]['answer']}</li>
             <li class="list-group-item">You were ${results[i]} !</li>
-            <li class="list-group-item">Current score: ${score}</li>
         </ul>
         </div>
         `

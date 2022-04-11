@@ -45,9 +45,36 @@ def createquestions(request):
                     question = artworkquestion.createquestion()
                     contentcheck = artworkquestion.checkvalid(question)
                 question = artworkquestion.format(question, x)
-                print(question)
                 questions.append(question)
-                
+
+            if topics[i] == "Sports":
+                contentcheck = 0
+                while contentcheck == 0:
+                    question = sportsquestion.createquestion()
+                    contentcheck = sportsquestion.checkvalid(question)
+                question = sportsquestion.format(question, x)
+                questions.append(question)
+
+            if topics[i] == "World":
+                contentcheck = 0
+                while contentcheck == 0:
+                    question = countryquestion.createquestion()
+                    contentcheck = countryquestion.checkvalid(question)
+                question = countryquestion.format(question, x)
+                questions.append(question)
+
+            if topics[i] == "Animal":
+                # zoo-animal-api includes a rand function, no validity checks or random functions are required
+                question = animalquestion.createquestion()
+                question = animalquestion.format(question, x)
+                questions.append(question)
+
+            if topics[i] == "Movie":
+                # movie-quote-api includes a rand function, no validity checks or random functions are required
+                question = quotequestion.createquestion()
+                question = quotequestion.format(question, x)
+                questions.append(question)
+
         print(questions)
         return JsonResponse(questions, safe=False)
 
@@ -104,22 +131,23 @@ def logoutview(request):
 class artworkquestion:
     
     def createquestion():
-        # Select a random number from 0 to 90000 
-        artid = randrange(1, 90000)
+        # Select a random number from 0 to (max)90000 
+        artid = randrange(0, 90000)
         # Enter id into api call
         url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
         response = requests.get(url)
         json = response.json()
         return json
 
+
     def checkvalid(json):
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
-            artworkid = (json["data"]["id"])
+            datestart = json["data"]["date_start"]
         except:
             return 0
         else:
-            if json["data"]["date_start"] != json["data"]["date_end"]:
+            if datestart != json["data"]["date_end"]:
                 return 0
             else:
                 return 1
@@ -131,6 +159,7 @@ class artworkquestion:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 1,
                 "title" : json["data"]["title"],
                 "year": json["data"]["date_start"],
@@ -138,11 +167,12 @@ class artworkquestion:
                 "question" : "Which artist painted this artwork",
                 "answer": json["data"]["artist_title"]
             }
-            return question
+
         if choice == 2:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 2,
                 "title" : json["data"]["title"],
                 "year": json["data"]["date_start"],
@@ -150,11 +180,12 @@ class artworkquestion:
                 "question": "Which country is this artwork from",
                 "answer": json["data"]["place_of_origin"]
             }
-            return question
+
         if choice == 3:
             question = {
                 "number": id,
                 "url": url,
+                "category": "arts",
                 "type": 3,
                 "title" : json["data"]["title"],
                 "country": json["data"]["place_of_origin"],
@@ -162,7 +193,8 @@ class artworkquestion:
                 "question": "In which year was this artwork painted",
                 "answer": json["data"]["date_start"]
             }
-            return question
+
+        return question
 
     def createurl(json):
         iiif = json["config"]["iiif_url"]
@@ -170,3 +202,217 @@ class artworkquestion:
         suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url
+
+class sportsquestion:
+
+    def createquestion():
+        # Select a random number from 0 to (max)1000  
+        sportid = randrange(1, 200)
+        # Enter id into api call
+        url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def checkvalid(json):
+        try:
+            url = json["data"]["attributes"]["icon"]
+        except:
+            return 0
+        else:
+            if url == None:
+                return 0
+            if json["data"]["attributes"]["description"] == None:
+                return 0
+            else:
+                return 1
+
+    def format(json, id):
+        choice = randrange(1, 3)
+
+        # Strip any instances of the sport name in the description
+        description = str(json["data"]["attributes"]["description"])
+        title = str(json["data"]["attributes"]["name"])
+        description = description.replace(title, "SPORT")
+        description = description.replace(title.lower(), "SPORT")
+
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "sports",
+                "url": json["data"]["attributes"]["icon"],
+                "type": 1,
+                "title" : title,
+                "description" : description,
+                "question" : "Based on the picture, what is the name of this sport?",
+                "answer": json["data"]["attributes"]["name"]
+            }
+
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "sports",
+                "url": json["data"]["attributes"]["icon"],
+                "type": 2,
+                "title" : title,
+                "description" : description,
+                "question" : "Based on the description, what is the name of this sport?",
+                "answer": json["data"]["attributes"]["name"]
+            }
+
+        return question
+
+class countryquestion:
+    
+    def createquestion():
+        # Select a random number from 0 to (max)1000  
+        worldid = randrange(1, 700)
+        # Enter id into api call
+        url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def checkvalid(json):
+        try:
+            url = json[0]["flags"]["png"]
+        except:
+            return 0
+        else:
+            if url == None:
+                return 0
+            else:
+                return 1
+
+    def format(json, id):
+        choice = randrange(1, 4)
+
+        # Which country in REGION speaks LANGUAGE_CODE
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 1,
+                "region" : json[0]["region"],
+                "question": "Which country speaks this language",
+                "language" : json[0]["languages"][0]["name"],
+                "answer": json[0]["name"]
+            }
+
+
+        # Which country in REGION uses CURRENCY
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 2,
+                "region" : json[0]["region"],
+                "question": "Which country uses this currency",
+                "currency" : json[0]["currencies"][0]["name"],
+                "answer": json[0]["name"]
+            }
+
+
+
+        # Which country in REGION has population of POPULATION?
+        if choice == 3:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 3,
+                "region" : json[0]["region"],
+                "question": "Which country has this population",
+                "population" : json[0]["population"],
+                "answer": json[0]["name"]
+            }
+
+        return question
+
+class animalquestion:
+
+    #zoo-animal-api already has a rand function, so checkvalid and random functions are not required
+    def createquestion():
+        response = requests.get("https://zoo-animal-api.herokuapp.com/animals/rand")
+        json = response.json()
+        return json
+
+    def format(json, id):
+        choice = randrange(1, 4)
+
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 1,
+                "diet": json["diet"],
+                "question": "Which animal matches the above picture and has this diet",
+                "answer": json["name"]
+            }
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 2,
+                "habitat": json["habitat"],
+                "question": "Which animal matches the above picture and has this habitat",
+                "answer": json["name"]
+            }
+
+        if choice == 3:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 3,
+                "location": json["geo_range"],
+                "question": "Which animal matches the above picture and lives in ",
+                "answer": json["name"]
+            }
+        
+        return question
+        
+        
+class quotequestion:
+
+    #movie-quote-api already has a rand function, so checkvalid and random functions are not required
+    def createquestion():
+        response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
+        json = response.json()
+        print(json)
+        return json
+
+    def format(json, id):
+        choice = randrange(1, 3)
+
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "quote",
+                "type": 1,
+                "movie": json["show"],
+                "quote": json["quote"],
+                "person": json["role"],
+                "question": "In which movie was this quote said?",
+                "answer": json["show"]
+            }
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "quote",
+                "type": 2,
+                "movie": json["show"],
+                "quote": json["quote"],
+                "person": json["role"],
+                "question": "In this movie, which person said this quote",
+                "answer": json["role"]
+            }
+
+        return question
