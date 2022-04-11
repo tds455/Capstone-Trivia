@@ -13,7 +13,7 @@ from random import seed, random, randrange, randint
 # Seed RNG
 seed()
 
-# Create your views here.
+# Views
 def index(request):
     # Return the front page
     return render(request, "index.html")
@@ -21,6 +21,7 @@ def index(request):
 def triviagame(request):
     return render(request, "trivia.html")
 
+# API Routes
 @csrf_exempt
 @login_required
 def createquestions(request):
@@ -127,6 +128,8 @@ def logoutview(request):
     #Logout the current user
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+# Objects
 
 class artworkquestion:
     
