@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 // These are currently hardcoded, but they could instead be created from form input
-var alltopics = ["Art", "Animal", "World", "Sports", "Science"]
-var questionvals = ["0", "0", "0", "0", "0", "2", "9", "12"]
+var alltopics = ["Art", "Animal", "World", "Sports", "Movie"]
+var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
@@ -71,6 +71,9 @@ function quizview() {
         }
         if (question['category'] == "animal") {
             element = animalquestion(question);
+        }
+        if (question['category'] == "quote") {
+            element = quotequestion(question);
         }
         
         document.querySelector('#quizview').appendChild(element);
@@ -230,6 +233,39 @@ function worldquestion(question) {
         <img class="card-img-top" src="${question['url']}" alt="flag">
         <div class="card-body">
         <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+
+    return element
+}
+
+function quotequestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">In which movie did ${question['person']} say "${question['quote']}"</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">In ${question['movie']} who said the following "${question['quote']}"</h5>
         <div class="form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">

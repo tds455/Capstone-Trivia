@@ -69,6 +69,12 @@ def createquestions(request):
                 question = animalquestion.format(question, x)
                 questions.append(question)
 
+            if topics[i] == "Movie":
+                # movie-quote-api includes a rand function, no validity checks or random functions are required
+                question = quotequestion.createquestion()
+                question = quotequestion.format(question, x)
+                questions.append(question)
+
         print(questions)
         return JsonResponse(questions, safe=False)
 
@@ -332,7 +338,6 @@ class animalquestion:
     def createquestion():
         response = requests.get("https://zoo-animal-api.herokuapp.com/animals/rand")
         json = response.json()
-        print(json)
         return json
 
     def format(json, id):
@@ -389,34 +394,25 @@ class quotequestion:
         if choice == 1:
             question = {
                 "number": id,
-                "category": "animal",
-                "url": json["image_link"],
+                "category": "quote",
                 "type": 1,
-                "diet": json["diet"],
-                "question": "Which animal matches the above picture and has this diet",
-                "answer": json["name"]
+                "movie": json["show"],
+                "quote": json["quote"],
+                "person": json["role"],
+                "question": "In which movie was this quote said?",
+                "answer": json["show"]
             }
 
         if choice == 2:
             question = {
                 "number": id,
-                "category": "animal",
-                "url": json["image_link"],
+                "category": "quote",
                 "type": 2,
-                "habitat": json["habitat"],
-                "question": "Which animal matches the above picture and has this habitat",
-                "answer": json["name"]
+                "movie": json["show"],
+                "quote": json["quote"],
+                "person": json["role"],
+                "question": "In this movie, which person said this quote",
+                "answer": json["role"]
             }
 
-        if choice == 3:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 3,
-                "location": json["geo_range"],
-                "question": "Which animal matches the above picture and lives in ",
-                "answer": json["name"]
-            }
-        
         return question
