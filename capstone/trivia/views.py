@@ -1,5 +1,3 @@
-from nturl2path import url2pathname
-from unicodedata import name
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -63,6 +61,12 @@ def createquestions(request):
                     question = countryquestion.createquestion()
                     contentcheck = countryquestion.checkvalid(question)
                 question = countryquestion.format(question, x)
+                questions.append(question)
+
+            if topics[i] == "Animal":
+                # zoo-animal-api includes a rand function, no validity checks or random functions are required
+                question = animalquestion.createquestion()
+                question = animalquestion.format(question, x)
                 questions.append(question)
 
         print(questions)
@@ -321,4 +325,21 @@ class countryquestion:
             }
             return question
 
+class animalquestion:
 
+    #zoo-animal-api already has a rand function, so checkvalid and random functions are not required
+    def createquestion():
+        response = requests.get("https://zoo-animal-api.herokuapp.com/animals/rand")
+        json = response.json()
+        print(json)
+        return json
+
+    def format(json, id):
+        choice = 1
+
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "animal",
+            }
+    
