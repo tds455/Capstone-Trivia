@@ -66,6 +66,9 @@ function quizview() {
         if (question['category'] == "sports") {
             element = sportsquestion(question);
         }
+        if (question['category'] == "world") {
+            element = worldquestion(question);
+        }
         
         document.querySelector('#quizview').appendChild(element);
         });
@@ -88,7 +91,7 @@ function artquestion(question) {
     // Create HTML element containing question code
     const element = document.createElement('div');
     element.innerHTML = `
-    <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
+    <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
     <img class="card-img-top" src="${question['url']}" alt="Artwork">
     <div class="card-body">
     <h5 class="card-title">${question['question']}"</h5>
@@ -107,7 +110,7 @@ function sportsquestion(question) {
     const element = document.createElement('div');
     if (question["type"] == "1") {
         element.innerHTML = `
-        <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
         <img class="card-img-top" src="${question['url']}" alt="Artwork">
         <div class="card-body">
         <h5 class="card-title">${question['question']}"</h5>
@@ -121,7 +124,7 @@ function sportsquestion(question) {
     }
     if (question["type"] == "2") {
         element.innerHTML = `
-        <div class="card border-primary mb-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
         <p> Description: ${question['description']} </p>
         <div class="card-body">
         <h5 class="card-title">${question['question']}"</h5>
@@ -133,9 +136,56 @@ function sportsquestion(question) {
         </div>
         `
     }
+    return element
+}
+
+function worldquestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag speaks ${question['language']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag uses the ${question['currency']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "3") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card-body">
+        <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
 
     return element
-
 }
 
 function checkanswers(questions) {
