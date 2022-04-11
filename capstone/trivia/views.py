@@ -65,6 +65,7 @@ def createquestions(request):
                 question = countryquestion.format(question, x)
                 questions.append(question)
 
+        # print(questions)
         return JsonResponse(questions, safe=False)
 
 def register(request):
@@ -255,13 +256,73 @@ class countryquestion:
         # Select a random number from 0 to (max)1000  
         worldid = randrange(1, 700)
         # Enter id into api call
-        url = "https://restcountries.com/v2/callingcode/242".format(worldid)
+        url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
         response = requests.get(url)
         json = response.json()
         return json
 
     def checkvalid(json):
-        pass
+        try:
+            url = json[0]["flags"]["png"]
+        except:
+            return 0
+        else:
+            if url == None:
+                return 0
+            else:
+                return 1
 
     def format(json, id):
-        pass
+        choice = randrange(1, 5)
+
+        # Which country in REGION speaks LANGUAGE_CODE
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 1,
+                "region" : json[0]["region"],
+                "language" : json[0]["languages"][0]["name"],
+                "answer": json[0]["name"]
+            }
+            return question
+
+        # Which country in REGION uses CURRENCY
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 2,
+                "region" : json[0]["region"],
+                "language" : json[0]["currencies"][0]["name"],
+                "answer": json[0]["name"]
+            }
+            return question
+
+        # Which country has this FLAG
+        if choice == 3:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 3,
+                "answer": json[0]["name"]
+            }
+            return question
+
+        # Which country in REGION has population of POPULATION?
+        if choice == 4:
+            question = {
+                "number": id,
+                "category": "world",
+                "url": json[0]["flags"]["png"],
+                "type": 4,
+                "region" : json[0]["region"],
+                "population" : json[0]["population"],
+                "answer": json[0]["name"]
+            }
+            return question
+
+
