@@ -57,6 +57,14 @@ def createquestions(request):
                 question = sportsquestion.format(question, x)
                 questions.append(question)
 
+            if topics[i] == "World":
+                contentcheck = 0
+                while contentcheck == 0:
+                    question = countryquestion.createquestion()
+                    contentcheck = countryquestion.checkvalid(question)
+                question = countryquestion.format(question, x)
+                questions.append(question)
+
         return JsonResponse(questions, safe=False)
 
 def register(request):
@@ -241,4 +249,19 @@ class sportsquestion:
             }
             return question
 
+class countryquestion:
     
+    def createquestion():
+        # Select a random number from 0 to (max)1000  
+        worldid = randrange(1, 700)
+        # Enter id into api call
+        url = "https://restcountries.com/v2/callingcode/242".format(worldid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def checkvalid(json):
+        pass
+
+    def format(json, id):
+        pass

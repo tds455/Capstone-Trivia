@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 // These are currently hardcoded, but they could instead be created from form input
-var alltopics = ["Art", "Music", "History", "Sports", "Science"]
+var alltopics = ["Art", "Music", "World", "Sports", "Science"]
 var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
