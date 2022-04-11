@@ -69,6 +69,9 @@ function quizview() {
         if (question['category'] == "world") {
             element = worldquestion(question);
         }
+        if (question['category'] == "animal") {
+            element = animalquestion(question);
+        }
         
         document.querySelector('#quizview').appendChild(element);
         });
@@ -136,6 +139,57 @@ function sportsquestion(question) {
         </div>
         `
     }
+    return element
+}
+
+function animalquestion(question) {
+    // Create HTML element containing question code
+    const element = document.createElement('div');
+    if (question["type"] == "1") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}</h5>
+        <p>${question['diet']}</p>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "2") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}</h5>
+        <p>${question['habitat']}</p>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+    if (question["type"] == "3") {
+        element.innerHTML = `
+        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card-body">
+        <h5 class="card-title">${question['question']}${question['location']}</h5>
+        <div class="form-group">
+        <label for="answer${question['number']}">Answer</label>
+        <input type="text" class="form-control" id="answer${question['number']}">
+        </div>
+        </div>
+        </div>
+        `
+    }
+
     return element
 }
 

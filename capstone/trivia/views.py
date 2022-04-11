@@ -135,11 +135,9 @@ class artworkquestion:
 
 
     def checkvalid(json):
-        print("checkvalid")
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
             datestart = json["data"]["date_start"]
-            print(datestart)
         except:
             return 0
         else:
@@ -163,7 +161,7 @@ class artworkquestion:
                 "question" : "Which artist painted this artwork",
                 "answer": json["data"]["artist_title"]
             }
-            return question
+
         if choice == 2:
             question = {
                 "number": id,
@@ -176,7 +174,7 @@ class artworkquestion:
                 "question": "Which country is this artwork from",
                 "answer": json["data"]["place_of_origin"]
             }
-            return question
+
         if choice == 3:
             question = {
                 "number": id,
@@ -189,7 +187,8 @@ class artworkquestion:
                 "question": "In which year was this artwork painted",
                 "answer": json["data"]["date_start"]
             }
-            return question
+
+        return question
 
     def createurl(json):
         iiif = json["config"]["iiif_url"]
@@ -355,7 +354,7 @@ class animalquestion:
                 "number": id,
                 "category": "animal",
                 "url": json["image_link"],
-                "type": 1,
+                "type": 2,
                 "habitat": json["habitat"],
                 "question": "Which animal matches the above picture and has this habitat",
                 "answer": json["name"]
@@ -366,11 +365,58 @@ class animalquestion:
                 "number": id,
                 "category": "animal",
                 "url": json["image_link"],
-                "type": 1,
+                "type": 3,
                 "location": json["geo_range"],
-                "question": "Which animal matches the above picture and lives in",
+                "question": "Which animal matches the above picture and lives in ",
                 "answer": json["name"]
             }
         
         return question
-    
+        
+        
+class quotequestion:
+
+    #movie-quote-api already has a rand function, so checkvalid and random functions are not required
+    def createquestion():
+        response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
+        json = response.json()
+        print(json)
+        return json
+
+    def format(json, id):
+        choice = randrange(1, 3)
+
+        if choice == 1:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 1,
+                "diet": json["diet"],
+                "question": "Which animal matches the above picture and has this diet",
+                "answer": json["name"]
+            }
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 2,
+                "habitat": json["habitat"],
+                "question": "Which animal matches the above picture and has this habitat",
+                "answer": json["name"]
+            }
+
+        if choice == 3:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 3,
+                "location": json["geo_range"],
+                "question": "Which animal matches the above picture and lives in ",
+                "answer": json["name"]
+            }
+        
+        return question
