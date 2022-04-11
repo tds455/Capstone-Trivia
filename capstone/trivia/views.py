@@ -242,7 +242,7 @@ class sportsquestion:
                 "question" : "Based on the picture, what is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
-            return question
+
 
         if choice == 2:
             question = {
@@ -255,7 +255,8 @@ class sportsquestion:
                 "question" : "Based on the description, what is the name of this sport?",
                 "answer": json["data"]["attributes"]["name"]
             }
-            return question
+
+        return question
 
 class countryquestion:
     
@@ -294,7 +295,7 @@ class countryquestion:
                 "language" : json[0]["languages"][0]["name"],
                 "answer": json[0]["name"]
             }
-            return question
+
 
         # Which country in REGION uses CURRENCY
         if choice == 2:
@@ -308,7 +309,7 @@ class countryquestion:
                 "currency" : json[0]["currencies"][0]["name"],
                 "answer": json[0]["name"]
             }
-            return question
+
 
 
         # Which country in REGION has population of POPULATION?
@@ -323,7 +324,8 @@ class countryquestion:
                 "population" : json[0]["population"],
                 "answer": json[0]["name"]
             }
-            return question
+
+        return question
 
 class animalquestion:
 
@@ -335,11 +337,40 @@ class animalquestion:
         return json
 
     def format(json, id):
-        choice = 1
+        choice = randrange(1, 4)
 
         if choice == 1:
             question = {
                 "number": id,
                 "category": "animal",
+                "url": json["image_link"],
+                "type": 1,
+                "diet": json["diet"],
+                "question": "Which animal matches the above picture and has this diet",
+                "answer": json["name"]
             }
+
+        if choice == 2:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 1,
+                "habitat": json["habitat"],
+                "question": "Which animal matches the above picture and has this habitat",
+                "answer": json["name"]
+            }
+
+        if choice == 3:
+            question = {
+                "number": id,
+                "category": "animal",
+                "url": json["image_link"],
+                "type": 1,
+                "location": json["geo_range"],
+                "question": "Which animal matches the above picture and lives in",
+                "answer": json["name"]
+            }
+        
+        return question
     
