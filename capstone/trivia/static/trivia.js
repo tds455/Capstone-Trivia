@@ -41,17 +41,26 @@ function quizview() {
     // Check selected amount of questions
     totalqs = ""
 
-    for (let i = 5; i <= questionvals.length; i++)
+    for (let i = 5; i < questionvals.length; i++)
         if (form[i]["checked"] == true) {
             totalqs = questionvals[i]
         }
+        
+    // Check if fastmode is ticked
+    if (form[8]["checked"] == true) {
+        fast = 1
+    }
+    else {
+        fast = 0
+    }
 
     // Create POST request
     fetch('/createquestions', {
         method: 'POST',
         body: JSON.stringify({
             totalqs: totalqs,
-            topics: topics
+            topics: topics,
+            fast: fast
         })
     })
     .then(response => response.json())
