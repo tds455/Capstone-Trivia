@@ -1,0 +1,33 @@
+.quizcard {
+    height: 35rem;
+    width: 20%
+}
+
+.quizimg {
+    max-height: 300px;
+    max-width: 80%;
+}
+
+.animalquizimg {
+    max-height: 300px;
+    max-width: 80%;
+}
+
+.worldquizimg {
+    max-height: 300px;
+    max-width: 80%;
+}
+
+.quizbutton {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center
+}
+
+.quizinput {
+    position: absolute;
+    bottom: 5%;
+    left: 10%;
+    right: 10%;
+    width: 75%;
+}

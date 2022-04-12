@@ -15,6 +15,7 @@ function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
     document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
+    document.querySelector('#quizviewbutton').style.display = 'none';
 }
 
 function quizview() {
@@ -91,14 +92,15 @@ function quizview() {
     .then(questions => {
         const submitelement = document.createElement('div');
         submitelement.innerHTML = `
-        <button class="btn btn-outline-dark" id="answersubmit" type="button"> Submit </button>
+        <button class="btn btn-lg btn-block btn-dark" id="answersubmit" type="button"> Submit </button>
         `
         submitelement.addEventListener('click', () => checkanswers(quizquestions));
-        document.querySelector('#quizview').appendChild(submitelement);
+        document.querySelector('#quizviewbutton').appendChild(submitelement);
 
         // Update HTML views
         document.querySelector('#loadingview').style.display = 'none';
         document.querySelector('#quizview').style.display = 'block';
+        document.querySelector('#quizviewbutton').style.display = 'block';
     })
 }
 
@@ -106,11 +108,11 @@ function artquestion(question) {
     // Create HTML element containing question code
     const element = document.createElement('div');
     element.innerHTML = `
-    <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-    <img class="card-img-top" src="${question['url']}" alt="Artwork">
+    <div class="card border-primary mt-3 text-center quizcard">
+    <img class="card-img-top quizimg" src="${question['url']}" alt="Artwork">
     <div class="card-body">
     <h5 class="card-title">${question['question']}</h5>
-    <div class="form-group">
+    <div class="quizinput form-group">
     <label for="answer${question['number']}">Answer</label>
     <input type="text" class="form-control" id="answer${question['number']}">
     </div>
@@ -125,11 +127,11 @@ function sportsquestion(question) {
     const element = document.createElement('div');
     if (question["type"] == "1") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="Artwork">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="card-img-top quizimg" src="${question['url']}" alt="Sport">
         <div class="card-body">
         <h5 class="card-title">${question['question']}"</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -139,11 +141,11 @@ function sportsquestion(question) {
     }
     if (question["type"] == "2") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <p> Description: ${question['description']} </p>
+        <div class="card border-primary mt-3 text-center quizcard">
         <div class="card-body">
         <h5 class="card-title">${question['question']}"</h5>
-        <div class="form-group">
+        <p> Description: ${question['description']} </p>
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -159,12 +161,12 @@ function animalquestion(question) {
     const element = document.createElement('div');
     if (question["type"] == "1") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="card-img-top animalquizimg" src="${question['url']}" alt="animal">
         <div class="card-body">
         <h5 class="card-title">${question['question']}</h5>
         <p>${question['diet']}</p>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -174,12 +176,12 @@ function animalquestion(question) {
     }
     if (question["type"] == "2") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="card-img-top animalquizimg" src="${question['url']}" alt="animal">
         <div class="card-body">
         <h5 class="card-title">${question['question']}</h5>
         <p>${question['habitat']}</p>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -189,11 +191,11 @@ function animalquestion(question) {
     }
     if (question["type"] == "3") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="animal">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="card-img-top animalquizimg" src="${question['url']}" alt="animal">
         <div class="card-body">
         <h5 class="card-title">${question['question']}${question['location']}</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -210,11 +212,11 @@ function worldquestion(question) {
     const element = document.createElement('div');
     if (question["type"] == "1") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="worldquizimg card-img-top" src="${question['url']}" alt="flag">
         <div class="card-body">
         <h5 class="card-title">Which country in ${question['region']} with the above flag speaks ${question['language']}</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -224,11 +226,11 @@ function worldquestion(question) {
     }
     if (question["type"] == "2") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="worldquizimg card-img-top" src="${question['url']}" alt="flag">
         <div class="card-body">
         <h5 class="card-title">Which country in ${question['region']} with the above flag uses the ${question['currency']}</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -238,11 +240,11 @@ function worldquestion(question) {
     }
     if (question["type"] == "3") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
-        <img class="card-img-top" src="${question['url']}" alt="flag">
+        <div class="card border-primary mt-3 text-center quizcard">
+        <img class="worldquizimg card-img-top" src="${question['url']}" alt="flag">
         <div class="card-body">
         <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']}</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -259,10 +261,10 @@ function quotequestion(question) {
     const element = document.createElement('div');
     if (question["type"] == "1") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card border-primary mt-3 text-center quizcard">
         <div class="card-body">
         <h5 class="card-title">In which movie did ${question['person']} say "${question['quote']}"</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -272,10 +274,10 @@ function quotequestion(question) {
     }
     if (question["type"] == "2") {
         element.innerHTML = `
-        <div class="card border-primary mt-3 text-center col-sm" style="max-width: 18rem;">
+        <div class="card border-primary mt-3 text-center quizcard">
         <div class="card-body">
         <h5 class="card-title">In ${question['movie']} who said the following "${question['quote']}"</h5>
-        <div class="form-group">
+        <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
         </div>
@@ -292,6 +294,7 @@ function checkanswers(questions) {
     document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#resultsview').style.display = 'block';
+    document.querySelector('#quizviewbutton').style.display = 'none';
 
     let answers = document.getElementById("quizviewform").elements;
     results = []
