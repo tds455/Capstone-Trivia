@@ -9,3 +9,7 @@ class Userstats(models.Model):
     userid = models.IntegerField()
     score = models.IntegerField()
     gamesplayed = models.IntegerField()
+
+class IDcache(models.Model):
+    category = models.CharField(max_length=20)
+    APIID = models.IntegerField()

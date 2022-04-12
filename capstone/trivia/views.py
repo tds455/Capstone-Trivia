@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from django.urls import reverse
-from .models import User
+from .models import User, Userstats, IDcache
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -154,6 +154,9 @@ class artworkquestion:
             if datestart != json["data"]["date_end"]:
                 return 0
             else:
+                # Cache successful ID
+                apiID = json["data"]["id"]
+                query = IDcache.objects.get_or_create(APIID=apiID, category="art")
                 return 1
 
     def format(json, id):
@@ -229,6 +232,9 @@ class sportsquestion:
             if json["data"]["attributes"]["description"] == None:
                 return 0
             else:
+                # Cache successful ID
+                apiID = json["data"]["id"]
+                query = IDcache.objects.get_or_create(APIID=apiID, category="sports")
                 return 1
 
     def format(json, id):
@@ -287,6 +293,9 @@ class countryquestion:
             if url == None:
                 return 0
             else:
+                # Cache successful ID
+                apiID = json[0]["callingCodes"][0]
+                query = IDcache.objects.get_or_create(APIID=apiID, category="country")
                 return 1
 
     def format(json, id):
