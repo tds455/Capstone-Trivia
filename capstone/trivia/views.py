@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import requests
-from random import seed, random, randrange, randint
+from random import seed, random, randrange, randint, choice
 
 # Seed RNG
 seed()
@@ -94,7 +94,7 @@ def createquestions(request):
             i = randrange(0, len(topics))
             if topics[i] == "Art":
                 if fast == 1:
-                    pass
+                    question = artworkquestion.createfastquestion()
                 else:
                     contentcheck = 0
                     while contentcheck == 0:
@@ -105,7 +105,7 @@ def createquestions(request):
 
             if topics[i] == "Sports":
                 if fast == 1:
-                    print("fast")
+                    question = sportsquestion.createfastquestion()
                 else:
                     contentcheck = 0
                     while contentcheck == 0:
@@ -116,7 +116,7 @@ def createquestions(request):
 
             if topics[i] == "World":
                 if fast == 1:
-                    print("fast")
+                    question = countryquestion.createfastquestion()
                 else:
                     contentcheck = 0
                     while contentcheck == 0:
@@ -153,6 +153,15 @@ class artworkquestion:
         json = response.json()
         return json
 
+    def createfastquestion():
+        # Take a random url from the IDCache model
+        query = list(IDcache.objects.filter(category = "art"))
+        query = choice(query)
+        id = query.APIID
+        url = "https://api.artic.edu/api/v1/artworks/{0}".format(id)
+        response = requests.get(url)
+        json = response.json()
+        return json
 
     def checkvalid(json):
         #Check the returned json is valid and that the year range is a single number (for question purposes)
@@ -231,6 +240,16 @@ class sportsquestion:
         json = response.json()
         return json
 
+    def createfastquestion():
+        # Take a random url from the IDCache model
+        query = list(IDcache.objects.filter(category = "sports"))
+        query = choice(query)
+        id = query.APIID
+        url = "https://sports.api.decathlon.com/sports/{0}".format(id)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
     def checkvalid(json):
         try:
             url = json["data"]["attributes"]["icon"]
@@ -290,6 +309,16 @@ class countryquestion:
         worldid = randrange(1, 700)
         # Enter id into api call
         url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
+        response = requests.get(url)
+        json = response.json()
+        return json
+
+    def createfastquestion():
+        # Take a random url from the IDCache model
+        query = list(IDcache.objects.filter(category = "country"))
+        query = choice(query)
+        id = query.APIID
+        url = "https://restcountries.com/v2/callingcode/{0}".format(id)
         response = requests.get(url)
         json = response.json()
         return json
