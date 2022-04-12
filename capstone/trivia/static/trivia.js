@@ -32,8 +32,6 @@ function quizview() {
     // create array of question info to be checked for answers later
     quizquestions = []
 
-    console.log(form)
-
     for (let i = 0; i < alltopics.length; i++) {
         if (form[i]["checked"] == true) {
             topics.push(alltopics[i]) 
@@ -43,22 +41,11 @@ function quizview() {
     // Check selected amount of questions
     totalqs = ""
 
-    // console.log(form[0]["checked"])
-    // console.log(form[1]["checked"])
-    // console.log(form[2]["checked"])
-    // console.log(form[3]["checked"])
-    // console.log(form[4]["checked"])
-    console.log(form[5]["checked"])
-    console.log(form[6]["checked"])
-    console.log(form[7]["checked"])
-
     for (let i = 5; i < questionvals.length; i++)
         if (form[i]["checked"] == true) {
             totalqs = questionvals[i]
         }
-    
-    console.log(totalqs)
-    
+        
     // Check if fastmode is ticked
     if (form[8]["checked"] == true) {
         fast = 1
@@ -66,8 +53,6 @@ function quizview() {
     else {
         fast = 0
     }
-
-    console.log(fast)
 
     // Create POST request
     fetch('/createquestions', {
