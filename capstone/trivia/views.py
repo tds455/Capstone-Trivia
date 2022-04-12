@@ -105,7 +105,7 @@ def createquestions(request):
 
             if topics[i] == "Sports":
                 if fast == 1:
-                    pass
+                    print("fast")
                 else:
                     contentcheck = 0
                     while contentcheck == 0:
@@ -116,7 +116,7 @@ def createquestions(request):
 
             if topics[i] == "World":
                 if fast == 1:
-                    pass
+                    print("fast")
                 else:
                     contentcheck = 0
                     while contentcheck == 0:
