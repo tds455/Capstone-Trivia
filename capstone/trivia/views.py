@@ -229,6 +229,10 @@ class sportsquestion:
             if json["data"]["attributes"]["description"] == None:
                 return 0
             else:
+                # Cache successful ID
+                apiID = json["data"]["id"]
+                query = IDcache.objects.get_or_create(APIID=apiID, category="sports")
+                query.save()
                 return 1
 
     def format(json, id):

@@ -11,5 +11,5 @@ class Userstats(models.Model):
     gamesplayed = models.IntegerField()
 
 class IDcache(models.Model):
-    category = models.CharField()
-    ID = models.IntegerField()
+    category = models.CharField(max_length=20)
+    APIID = models.IntegerField()
