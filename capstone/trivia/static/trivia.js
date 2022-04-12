@@ -243,7 +243,7 @@ function worldquestion(question) {
         <div class="card border-primary mt-3 text-center quizcard">
         <img class="worldquizimg card-img-top" src="${question['url']}" alt="flag">
         <div class="card-body">
-        <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']}</h5>
+        <h5 class="card-title">Which country in ${question['region']} with the above flag has a population of ${question['population']} people</h5>
         <div class="quizinput form-group">
         <label for="answer${question['number']}">Answer</label>
         <input type="text" class="form-control" id="answer${question['number']}">
