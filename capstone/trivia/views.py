@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from django.urls import reverse
-from .models import User
+from .models import User, Userstats, IDcache
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
