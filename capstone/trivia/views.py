@@ -82,6 +82,7 @@ def createquestions(request):
         data = json.loads(request.body)
         topics = data["topics"]
         totalqs = data["totalqs"]
+        fast = data["fast"]
         totalqs = int(totalqs)
 
         # Create list of questions, looping for total number of questions 
@@ -92,26 +93,35 @@ def createquestions(request):
         for x in range(totalqs):
             i = randrange(0, len(topics))
             if topics[i] == "Art":
-                contentcheck = 0
-                while contentcheck == 0:
-                    question = artworkquestion.createquestion()
-                    contentcheck = artworkquestion.checkvalid(question)
+                if fast == 1:
+                    pass
+                else:
+                    contentcheck = 0
+                    while contentcheck == 0:
+                        question = artworkquestion.createquestion()
+                        contentcheck = artworkquestion.checkvalid(question)
                 question = artworkquestion.format(question, x)
                 questions.append(question)
 
             if topics[i] == "Sports":
-                contentcheck = 0
-                while contentcheck == 0:
-                    question = sportsquestion.createquestion()
-                    contentcheck = sportsquestion.checkvalid(question)
+                if fast == 1:
+                    pass
+                else:
+                    contentcheck = 0
+                    while contentcheck == 0:
+                        question = sportsquestion.createquestion()
+                        contentcheck = sportsquestion.checkvalid(question)
                 question = sportsquestion.format(question, x)
                 questions.append(question)
 
             if topics[i] == "World":
-                contentcheck = 0
-                while contentcheck == 0:
-                    question = countryquestion.createquestion()
-                    contentcheck = countryquestion.checkvalid(question)
+                if fast == 1:
+                    pass
+                else:
+                    contentcheck = 0
+                    while contentcheck == 0:
+                        question = countryquestion.createquestion()
+                        contentcheck = countryquestion.checkvalid(question)
                 question = countryquestion.format(question, x)
                 questions.append(question)
 
