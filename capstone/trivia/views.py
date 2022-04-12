@@ -306,7 +306,7 @@ class countryquestion:
     
     def createquestion():
         # Select a random number from 0 to (max)1000  
-        worldid = randrange(1, 700)
+        worldid = randrange(1, 1000)
         # Enter id into api call
         url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
         response = requests.get(url)
@@ -437,7 +437,6 @@ class quotequestion:
     def createquestion():
         response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
         json = response.json()
-        print(json)
         return json
 
     def format(json, id):
