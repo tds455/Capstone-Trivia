@@ -13,12 +13,17 @@ var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
     document.querySelector('#defaultview').style.display = 'block';
-    document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
+    document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#quizviewbutton').style.display = 'none';
     document.querySelector('#resultsview').style.display = 'none';
     document.querySelector('#scoreview').style.display = 'none';
     document.querySelector('#resultsbutton').style.display = 'none';
+    document.querySelector('#quizview').innerHTML = ``;
+    document.querySelector('#quizviewbutton').innerHTML = ``;
+    document.querySelector('#resultsview').innerHTML = ``;
+    document.querySelector('#scoreview').innerHTML = ``;
+    document.querySelector('#resultsbutton').innerHTML = ``;
 }
 
 function quizview() {
