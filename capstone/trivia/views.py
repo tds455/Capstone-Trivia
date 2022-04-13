@@ -14,15 +14,43 @@ seed()
 
 # Views
 def profileview(request):
-    if request.method == "GET":
-        # Get user profile to access ID
-        user = request.user
+    # Get user profile to access ID
+    user = request.user
 
-        # Retrieve user scores and pass into template
+    # Retrieve user scores and serialise to pass into template
+    try:
         query = Userstats.objects.get(userid=user.id)
         userscores = query.serialise()
+    except:
+        return render(request, "profile.html")
+    else:
+        if request.method == "GET":
 
-        return render(request, "profile.html", {"userscores": userscores})
+            return render(request, "profile.html", {"userscores": userscores})
+        
+        if request.method == "POST":
+
+            # Check that the testuser is not logged in
+
+            if user.username == "Testuser":
+                return render(request, "profile.html", {"userscores": userscores, "error": "Testuser password cannot be changed"})
+
+            # Take user input, validate, then use it to update password record
+            if len(request.POST["pw"]) < 6:
+                return render(request, "profile.html", {"userscores": userscores, "error": "Password must be at least 6 characters"})
+
+            # Check password matches confirmation
+            if request.POST["pw"] != request.POST["pwverify"]:
+                return render(request, "profile.html", {"userscores": userscores, "error": "Passwords did not match"})
+
+            query = User.objects.get(username = user.username)
+            query.set_password = request.POST["pw"]
+            query.save()
+            return render(request, "profile.html", {"userscores": userscores})
+
+
+
+    
 
 def register(request):
     if request.method == "GET":
