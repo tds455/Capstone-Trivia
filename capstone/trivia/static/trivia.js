@@ -325,23 +325,92 @@ function checkanswers(questions) {
     document.querySelector('#quizviewbutton').style.display = 'none';
 
     let answers = document.getElementById("quizviewform").elements;
-    results = []
-    score = 0
+
+    // Initialise score and rating values
+    let score = 0;
+    let artrating = 0;
+    let animalrating = 0;
+    let worldrating = 0;
+    let sportsrating = 0;
+    let movierating = 0;
+
+    let ratings = [];
+    let results = [];
+
     for (let i = 0; i < (answers.length - 1); i++) {
         if (answers[i]["value"] == questions[i]["answer"]) {
             results[i] = "Correct";
-            score += 1
+            score += 5
+            if (questions[i]['category'] == "arts") {
+                artrating += 5;
+            }
+            if (questions[i]['category'] == "sports") {
+                sportsrating += 5;
+            }
+            if (questions[i]['category'] == "world") {
+                worldrating += 5;
+            }
+            if (questions[i]['category'] == "animal") {
+                animalsrating += 5;
+            }
+            if (questions[i]['category'] == "quote") {
+                movierating += 5;
+            }
         }
         else {
             results[i] = "Incorrect"
+            if (questions[i]['category'] == "arts") {
+                artrating -= 5;
+            }
+            if (questions[i]['category'] == "sports") {
+                sportsrating -= 5;
+            }
+            if (questions[i]['category'] == "world") {
+                worldrating -= 5;
+            }
+            if (questions[i]['category'] == "animal") {
+                animalrating -= 5;
+            }
+            if (questions[i]['category'] == "quote") {
+                movierating -= 5;
+            }            
         }
     
     }
+
+    ratings.push(score, artrating, sportsrating, worldrating, animalrating, movierating)
+    displayscores(ratings, questions, answers, results)
+
+}
+
+function displayscores(ratings, questions, answers, results) {
+
+    // Display scores updates
+    const scores = document.createElement('div')
+    scores.innerHTML = `
+    <div class="container-fluid w-100">
+    <div class="header mt-5 text-center">
+        <h1>Scores and ratings</h1>
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item">Score: ${ratings[0]}</li>
+        <li class="list-group-item">Art rating change: ${ratings[1]}</li>
+        <li class="list-group-item">Sports rating change: ${ratings[2]}</li>
+        <li class="list-group-item">Geography rating change: ${ratings[3]}</li>
+        <li class="list-group-item">Animals rating change: ${ratings[4]}</li>
+        <li class="list-group-item">Movie / TV shows rating change: ${ratings[5]}</li>
+
+    </div>
+    </div>
+    <div class="card-columns">
+    `
+    document.querySelector('#resultsview').appendChild(scores);
+
+
     // Display results in HTML
     for (let i = 0; i < (results.length); i++)  {
         const element = document.createElement('div');
         element.innerHTML = `
-        <div class="card mt-5 mb-5 w-50">
+        <div class="card border-primary mt-3 text-center resultscard">
         <div class="card-header">
         Question: ${questions[i]['question']}
         </div>
@@ -354,6 +423,5 @@ function checkanswers(questions) {
         `
         document.querySelector('#resultsview').appendChild(element);
     }
-    
 
 }

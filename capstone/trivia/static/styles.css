@@ -3,6 +3,11 @@
     width: 20%
 }
 
+.resultscard {
+    height: 15rem;
+    width: 20%
+}
+
 .quizimg {
     max-height: 300px;
     max-width: 80%;
