@@ -359,7 +359,17 @@ function checkanswers(questions) {
     let results = [];
 
     for (let i = 0; i < (answers.length - 1); i++) {
-        if (answers[i]["value"] == questions[i]["answer"]) {
+        // Covert question and answer to lowercase to remove case sensitivity 
+        answer = answers[i]["value"]
+        console.log(answer)
+        answer = answer.toLowerCase()
+        console.log(answer)
+        question = questions[i]["answer"]
+        question = question.toLowerCase()
+
+        // Check if question matches answer, increasing score and ratings or decreasing ratings appropiately
+        // Scores can only increase, while ratings will go up and down with each answer
+        if (answer == question) {
             results[i] = "Correct";
             score += 5
             if (questions[i]['category'] == "arts") {
