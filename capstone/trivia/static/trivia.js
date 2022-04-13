@@ -373,8 +373,6 @@ function checkanswers(questions) {
         // Create string with correct answer.  
         questionanswer = String(questions[i]['answer'])
      
-        console.log(answer)
-        console.log(questionanswer)
         // Check if question matches answer, increasing score and ratings or decreasing ratings appropiately
         // Scores can only increase, while ratings will go up and down with each answer
         // Convert strings to lowercase to remove case sensitivity
