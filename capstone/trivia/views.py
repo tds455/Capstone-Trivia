@@ -15,8 +15,14 @@ seed()
 # Views
 def profileview(request):
     if request.method == "GET":
+        # Get user profile to access ID
+        user = request.user
 
-        return render(request, "profile.html")
+        # Retrieve user scores and pass into template
+        query = Userstats.objects.get(userid=user.id)
+        userscores = query.serialise()
+
+        return render(request, "profile.html", {"userscores": userscores})
 
 def register(request):
     if request.method == "GET":
@@ -57,11 +63,8 @@ def loginview(request):
     if request.method == "POST":
         # Attempt to sign user in
         username = request.POST["loginusername"]
-        print(username)
         password = request.POST["loginpw"]
-        print(password)
         user = authenticate(request, username=username, password=password)   
-        print(user)   
 
         # Check if authentication was successful and if so, log in the current user
         if user is not None:
