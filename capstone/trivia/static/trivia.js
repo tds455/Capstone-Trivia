@@ -17,6 +17,8 @@ function defaultview() {
     document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#quizviewbutton').style.display = 'none';
     document.querySelector('#resultsview').style.display = 'none';
+    document.querySelector('#scoreview').style.display = 'none';
+    document.querySelector('#resultsbutton').style.display = 'none';
 }
 
 function quizview() {
@@ -322,7 +324,9 @@ function checkanswers(questions) {
     document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#resultsview').style.display = 'block';
+    document.querySelector('#scoreview').style.display = 'block';
     document.querySelector('#quizviewbutton').style.display = 'none';
+    document.querySelector('#resultsbutton').style.display = 'block';
 
     let answers = document.getElementById("quizviewform").elements;
 
@@ -403,7 +407,7 @@ function displayscores(ratings, questions, answers, results) {
     </div>
     <div class="card-columns">
     `
-    document.querySelector('#resultsview').appendChild(scores);
+    document.querySelector('#scoreview').appendChild(scores);
 
 
     // Display results in HTML
@@ -423,5 +427,14 @@ function displayscores(ratings, questions, answers, results) {
         `
         document.querySelector('#resultsview').appendChild(element);
     }
+
+    const submitelement = document.createElement('div');
+    submitelement.innerHTML = `
+    <button class="btn btn-lg btn-block btn-dark" id="resultsback" type="button"> Play again </button>
+    `
+    submitelement.addEventListener('click', () => defaultview());
+    document.querySelector('#resultsbutton').appendChild(submitelement);
+
+    window.scrollTo(0,0);
 
 }
