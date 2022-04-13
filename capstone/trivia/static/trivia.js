@@ -16,6 +16,7 @@ function defaultview() {
     document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#quizviewbutton').style.display = 'none';
+    document.querySelector('#resultsview').style.display = 'none';
 }
 
 function quizview() {
@@ -39,69 +40,96 @@ function quizview() {
         }
     }
 
-    // Check selected amount of questions
-    totalqs = ""
+    // validate form input
 
-    for (let i = 5; i < questionvals.length; i++)
-        if (form[i]["checked"] == true) {
-            totalqs = questionvals[i]
-        }
-        
-    // Check if fastmode is ticked
-    if (form[8]["checked"] == true) {
-        fast = 1
-    }
-    else {
-        fast = 0
-    }
-
-    // Create POST request
-    fetch('/createquestions', {
-        method: 'POST',
-        body: JSON.stringify({
-            totalqs: totalqs,
-            topics: topics,
-            fast: fast
-        })
-    })
-    .then(response => response.json())
-    // Take response, format each question into HTML and add to HTML div
-    .then(questions => {
-        questions.forEach(question => {
-        quizquestions.push(question)
-
-        if (question['category'] == "arts") {
-            element = artquestion(question);
-        }
-        if (question['category'] == "sports") {
-            element = sportsquestion(question);
-        }
-        if (question['category'] == "world") {
-            element = worldquestion(question);
-        }
-        if (question['category'] == "animal") {
-            element = animalquestion(question);
-        }
-        if (question['category'] == "quote") {
-            element = quotequestion(question);
-        }
-        
-        document.querySelector('#quizview').appendChild(element);
-        });
-        })
-    .then(questions => {
-        const submitelement = document.createElement('div');
-        submitelement.innerHTML = `
-        <button class="btn btn-lg btn-block btn-dark" id="answersubmit" type="button"> Submit </button>
-        `
-        submitelement.addEventListener('click', () => checkanswers(quizquestions));
-        document.querySelector('#quizviewbutton').appendChild(submitelement);
-
-        // Update HTML views
+    // If no categories have been selected, return an error message
+    if (topics.length == 0) {
         document.querySelector('#loadingview').style.display = 'none';
-        document.querySelector('#quizview').style.display = 'block';
-        document.querySelector('#quizviewbutton').style.display = 'block';
-    })
+        document.querySelector('#resultsview').style.display = 'block';
+
+        document.querySelector('#resultsview').innerHTML = `
+        <div class="container">
+        <div class="header mt-5 text-center">
+        <p class="error">Please select one or more categories</p>
+        </div>
+        </div>
+        `
+        const element = document.createElement('div');
+        element.innerHTML = `
+        <div class="col-md-4 text-center mx-auto">
+        <button class="btn btn-lg btn-block btn-dark text-center" id="triviareturn" type="button"> Start again </button>
+        </div>
+        `
+        element.addEventListener('click', () => defaultview());
+        document.querySelector('#resultsview').appendChild(element);
+    }
+    // Continue processing form
+    else {
+
+        // Check selected amount of questions
+        totalqs = ""
+
+        for (let i = 5; i < questionvals.length; i++)
+            if (form[i]["checked"] == true) {
+                totalqs = questionvals[i]
+            }
+            
+        // Check if fastmode is ticked
+        if (form[8]["checked"] == true) {
+            fast = 1
+        }
+        else {
+            fast = 0
+        }
+
+        // Create POST request
+        fetch('/createquestions', {
+            method: 'POST',
+            body: JSON.stringify({
+                totalqs: totalqs,
+                topics: topics,
+                fast: fast
+            })
+        })
+        .then(response => response.json())
+        // Take response, format each question into HTML and add to HTML div
+        .then(questions => {
+            questions.forEach(question => {
+            quizquestions.push(question)
+
+            if (question['category'] == "arts") {
+                element = artquestion(question);
+            }
+            if (question['category'] == "sports") {
+                element = sportsquestion(question);
+            }
+            if (question['category'] == "world") {
+                element = worldquestion(question);
+            }
+            if (question['category'] == "animal") {
+                element = animalquestion(question);
+            }
+            if (question['category'] == "quote") {
+                element = quotequestion(question);
+            }
+            
+            document.querySelector('#quizview').appendChild(element);
+            });
+            })
+        .then(questions => {
+            const submitelement = document.createElement('div');
+            submitelement.innerHTML = `
+            <button class="btn btn-lg btn-block btn-dark" id="answersubmit" type="button"> Submit </button>
+            `
+            submitelement.addEventListener('click', () => checkanswers(quizquestions));
+            document.querySelector('#quizviewbutton').appendChild(submitelement);
+
+            // Update HTML views
+            document.querySelector('#loadingview').style.display = 'none';
+            document.querySelector('#quizview').style.display = 'block';
+            document.querySelector('#quizviewbutton').style.display = 'block';
+        })
+    }
 }
 
 function artquestion(question) {
