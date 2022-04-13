@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from django.urls import reverse
@@ -14,6 +13,10 @@ from random import seed, random, randrange, randint, choice
 seed()
 
 # Views
+def profileview(request):
+    if request.method == "GET":
+
+        return render(request, "profile.html")
 
 def register(request):
     if request.method == "GET":
@@ -59,7 +62,7 @@ def loginview(request):
 
         # Check if authentication was successful and if so, log in the current user
         if user is not None:
-            login(request, login)
+            login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "login.html", {"error": "Invalid username or password"})

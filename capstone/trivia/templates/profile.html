@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container text-center">
+    <div class="card box-shadow mt-5">
+        {% if user.is_authenticated %}
+        <div class="card-header">
+            <h1>User infomation</h1>
+        </div>
+        <div class="card-body">
+        <li>User score: </li>
+        <li>Art rating: </li>
+        <li>Sports rating: </li>
+        <li>Geography rating: </li>
+        <li>User score: </li>
+
+            <form action = "{% url 'profile' %}" method="post" >
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="registerpassword">Update password</label>
+                    <input type="password" name="pw" class="form-control" id="updatepasswordinput" placeholder="Password">
+                    <input type="password" name="pwverify" class="form-control mt-4" id="updatepasswordinputverify" placeholder="Verify Password">
+                  <button type="submit" class="btn btn-outline-dark">Submit</button>
+            </form>
+            {% else %}
+            <div class="container">
+                <div class="header mt-5 text-center">
+                    <h1>Please login or register</h1>
+                    <a href="{% url 'loginview' %}" class="btn btn-lg btn-block btn-dark text-center"> Login </a>
+                    <a href="{% url 'register' %}" class="btn btn-lg btn-block btn-dark text-center mb-5"> Register </a>
+              
+                </div>
+              </div>
+              
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

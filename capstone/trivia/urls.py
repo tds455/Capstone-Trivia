@@ -23,6 +23,7 @@ urlpatterns = [
     path('loginview', views.loginview, name="loginview"),
     path('logoutview', views.logoutview, name="logoutview"),
     path('triviagame', views.triviagame, name="triviagame"),
+    path('profileview', views.profileview, name="profileview"),
     # API routes
     path('createquestions', views.createquestions, name="createquestions"),
     path('updatescores', views.updatescores, name="updatescores"),
