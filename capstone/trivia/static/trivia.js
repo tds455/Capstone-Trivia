@@ -33,7 +33,7 @@ function defaultview() {
     .then(stats => {
         document.querySelector('#userscore').innerHTML =
         `
-            <a class="nav-link">Score: ${stats['score']}</a>
+            <a class="nav-link">Total score: ${stats['score']}</a>
         `
     })
 }
@@ -358,16 +358,25 @@ function checkanswers(questions) {
     let ratings = [];
     let results = [];
 
-    for (let i = 0; i < (answers.length - 1); i++) {
-        // Covert question and answer to lowercase to remove case sensitivity 
-        answer = answers[i]["value"]
-        answer = answer.toLowerCase()
-        question = questions[i]["answer"]
-        question = question.toLowerCase()
 
+
+    for (let i = 0; i < (answers.length - 1); i++) {
+
+        // Check if an answer was provided, and if not set it as an empty string
+        if (answers[i]['value'] != "") {
+            answer = answers[i]['value']
+        }
+        else {
+            answer = ""
+        }
+
+        // Create string with correct answer.  
+        questionanswer = String(questions[i]['answer'])
+     
         // Check if question matches answer, increasing score and ratings or decreasing ratings appropiately
         // Scores can only increase, while ratings will go up and down with each answer
-        if (answer == question) {
+        // Convert strings to lowercase to remove case sensitivity
+        if (answer.toLowerCase() == questionanswer.toLowerCase()) {
             results[i] = "Correct";
             score += 5
             if (questions[i]['category'] == "arts") {
@@ -380,7 +389,7 @@ function checkanswers(questions) {
                 worldrating += 5;
             }
             if (questions[i]['category'] == "animal") {
-                animalsrating += 5;
+                animalrating += 5;
             }
             if (questions[i]['category'] == "quote") {
                 movierating += 5;
@@ -407,6 +416,7 @@ function checkanswers(questions) {
     
     }
 
+    // Call displayscores function to display information in page
     ratings.push(score, artrating, sportsrating, worldrating, animalrating, movierating)
     displayscores(ratings, questions, answers, results)
 
@@ -478,7 +488,7 @@ function displayscores(ratings, questions, answers, results) {
     .then(stats => {
         document.querySelector('#userscore').innerHTML =
         `
-            <a class="nav-link">Score: ${stats['score']}</a>
+            <a class="nav-link">Total score: ${stats['score']}</a>
         `
     })
 

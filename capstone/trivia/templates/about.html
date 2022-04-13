@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1 class="mt-5"> Trivia </h1>
+
+<p class="about">Trivia is a quiz web app that I built for my <a href="https://cs50.harvard.edu/web/2020/">CS50W final project</a>.</p>
+<p class="about">It pulls information from five public APIs, depending on the topics the user requests to be quizzed on, parses the responses and formats them into questions.</p>
+<p class="about">Trivia will keep track of users scores and caches viable API routes to reduce loading times.</p>
+<h2 class="mt-5"> APIs </h1>
+<div class="about">
+I settled on using the following public APIs:
+<li><a href="https://api.artic.edu/docs/">Art Institute of Chicago</a></li>
+<li><a href="https://developers.decathlon.com/sports/">Decathlon Sports API</a></li>
+<li><a href="https://restcountries.com/">REST Countries</a></li>
+<li><a href="https://zoo-animal-api.herokuapp.com/"></a>Zoo Animal API</li>
+<li><a href="https://movie-quote-api.herokuapp.com/">Movie Quote API</a></li>
+
+All of these are public and do not require authentication. <br>
+Some of the records contain incomplete or inappropiate content, so the content will be check on the backend 
+to ensure suitability before it is returned to the frontend in JSON format.
+</div>
+<h2 class="mt-5"> Links </h1>
+<p class="about">
+You can view the project <a href="https://github.com/tds455/Capstone">here</a> on Github, as well as the rest of my public work. <br>
+You will also find a much more detailed Readme where I elaborate more on the development process.
+</p>
+
+<h2 class="mt-5"> Tech </h1>
+<p class="about">Trivia utilises Python/Django for it's backend, and HTML/CSS/Javascript for it's frontend <br>
+While parts of the site are rendered using Django templates, trivia (/triviagame) is entirely reactive and served by a single .html page. </p>
+
+<h2 class="mt-5"> Notes / To Do </h1>
+<div class="about mb-5">
+There are a few features and issues I plan on continuing to work on.
+<li><b>Question difficulty:</b> Some topics, especially Art, generate questions that are relatviely difficult compared to other topics.  These could be reworked, or hints can be provided</li>
+<li><b>Multiplayer:</b>I would like to add the option for multiple people to attempt the same quiz, or save a question set to be tried by others</li>
+<li><b>Score / Rating tracking:</b> Trivia currently only updates scores and ratings at the end of each game, before displaying them to the user when required.  Progress over time or other visualisations of data could be displayed instead</li>
+<li><b>Improve API selection:</b> The Movie Quote API only holds a limited selection of quotes, many of which will not be returned due to being tagged as containing adult language.</li>
+
+</div>
+
+        
+
+
+
+        
+{% endblock %}

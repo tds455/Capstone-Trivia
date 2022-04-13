@@ -13,6 +13,16 @@ from random import seed, random, randrange, randint, choice
 seed()
 
 # Views
+def index(request):
+    # Return the front page
+    return render(request, "index.html")
+
+def triviagame(request):
+    return render(request, "trivia.html")
+
+def about(request):
+    return render(request, "about.html")
+
 def profileview(request):
     # Get user profile to access ID
     user = request.user
@@ -48,9 +58,6 @@ def profileview(request):
             query.save()
             return render(request, "profile.html", {"userscores": userscores})
 
-
-
-    
 
 def register(request):
     if request.method == "GET":
@@ -106,12 +113,6 @@ def logoutview(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-def index(request):
-    # Return the front page
-    return render(request, "index.html")
-
-def triviagame(request):
-    return render(request, "trivia.html")
 
 # API Routes
 @csrf_exempt
