@@ -38,7 +38,7 @@ def register(request):
 
         # Check username is unique, and if so create the account, then log in the user
         try: 
-            user = User.objects.create_user(username, password)
+            user = User.objects.create_user(username=username, password=password)
             user.save()
 
         except:
@@ -57,8 +57,11 @@ def loginview(request):
     if request.method == "POST":
         # Attempt to sign user in
         username = request.POST["loginusername"]
+        print(username)
         password = request.POST["loginpw"]
-        user = authenticate(request, username=username, password=password)      
+        print(password)
+        user = authenticate(request, username=username, password=password)   
+        print(user)   
 
         # Check if authentication was successful and if so, log in the current user
         if user is not None:
