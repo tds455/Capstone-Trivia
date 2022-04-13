@@ -33,7 +33,7 @@ function defaultview() {
     .then(stats => {
         document.querySelector('#userscore').innerHTML =
         `
-            <a class="nav-link">Score: ${stats['score']}</a>
+            <a class="nav-link">Total score: ${stats['score']}</a>
         `
     })
 }
@@ -478,7 +478,7 @@ function displayscores(ratings, questions, answers, results) {
     .then(stats => {
         document.querySelector('#userscore').innerHTML =
         `
-            <a class="nav-link">Score: ${stats['score']}</a>
+            <a class="nav-link">Total score: ${stats['score']}</a>
         `
     })
 
