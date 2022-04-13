@@ -37,10 +37,14 @@ def register(request):
         try: 
             user = User.objects.create_user(username, password)
             user.save()
+
         except:
             return render(request, "register.html", {"error": "Username already taken"})
         else:
+            # Log in the user, then create them a stats table
             login(request, user)
+            stats = Userstats.objects.create(userid = user.id)
+            stats.save()
             return HttpResponseRedirect(reverse("index"))
 
 def loginview(request):
@@ -73,6 +77,41 @@ def triviagame(request):
     return render(request, "trivia.html")
 
 # API Routes
+@csrf_exempt
+@login_required
+def updatescores(request):
+    if request.method == "POST":
+        # Retrieve submitted scores
+        data = json.loads(request.body)
+
+        # Get user profile to access ID
+        user = request.user
+
+        # Access and update user's score recrods 
+        query = Userstats.objects.get(userid=user.id)
+        query.score += data["score"]
+        query.artrating += data["art"]
+        query.sportsrating += data["sports"]
+        query.worldrating += data["world"]
+        query.animalrating += data["animals"]
+        query.movierating += data["movies"]
+        query.gamesplayed += 1
+        query.save()
+
+        # Retrieve updated values in dictionary format and return to user
+        userscores = query.serialise()
+        return JsonResponse(userscores, safe=False)
+
+    if request.method == "GET":
+
+        # Get user profile to access ID and request score values
+        user = request.user
+        query = Userstats.objects.get(userid=user.id)
+
+        # Return user's current stats 
+        userscores = query.serialise()
+        return JsonResponse(userscores, safe=False)
+
 @csrf_exempt
 @login_required
 def createquestions(request):
@@ -140,6 +179,8 @@ def createquestions(request):
         print(questions)
         return JsonResponse(questions, safe=False)
 
+    else:
+        pass
 # Objects
 
 class artworkquestion:

@@ -24,6 +24,18 @@ function defaultview() {
     document.querySelector('#resultsview').innerHTML = ``;
     document.querySelector('#scoreview').innerHTML = ``;
     document.querySelector('#resultsbutton').innerHTML = ``;
+
+    // Retrieve and display latest score
+    fetch('/updatescores', {
+        method: 'GET',
+        })
+    .then(response => response.json())
+    .then(stats => {
+        document.querySelector('#userscore').innerHTML =
+        `
+            <a class="nav-link">Score: ${stats['score']}</a>
+        `
+    })
 }
 
 function quizview() {
@@ -441,5 +453,25 @@ function displayscores(ratings, questions, answers, results) {
     document.querySelector('#resultsbutton').appendChild(submitelement);
 
     window.scrollTo(0,0);
+
+    // Create POST request to update scores, then display new score in top corner
+    fetch('/updatescores', {
+        method: 'POST',
+        body: JSON.stringify({
+            score: ratings[0],
+            art: ratings[1],
+            sports: ratings[2],
+            world: ratings[3],
+            animals: ratings[4],
+            movies: ratings[5],
+            })
+        })
+    .then(response => response.json())
+    .then(stats => {
+        document.querySelector('#userscore').innerHTML =
+        `
+            <a class="nav-link">Score: ${stats['score']}</a>
+        `
+    })
 
 }
