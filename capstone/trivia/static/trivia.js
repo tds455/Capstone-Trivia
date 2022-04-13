@@ -361,9 +361,7 @@ function checkanswers(questions) {
     for (let i = 0; i < (answers.length - 1); i++) {
         // Covert question and answer to lowercase to remove case sensitivity 
         answer = answers[i]["value"]
-        console.log(answer)
         answer = answer.toLowerCase()
-        console.log(answer)
         question = questions[i]["answer"]
         question = question.toLowerCase()
 
