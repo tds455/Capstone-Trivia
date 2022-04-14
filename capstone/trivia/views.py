@@ -214,9 +214,8 @@ def createquestions(request):
                 question = quotequestion.format(question, x)
                 questions.append(question)
 
-        print(questions)
         return JsonResponse(questions, safe=False)
-
+  
     else:
         pass
 # Objects
