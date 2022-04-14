@@ -5,6 +5,22 @@
 
 
 ## Demo
+
+## Distinctiveness and Complexity
+
+<p> Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone/)
+
+### Technology
+
+<p> 
+
+### Files
+
+### Mobile-responsive
+
+### Caching
+
+### Django models
  
 ## Design
 
@@ -12,13 +28,7 @@
 
 ### Files
 
-## Distinctiveness and Complexity
 
-### Technology
-
-### Mobile-responsive
-
-### Caching
 
 ### User information and statistics
 
