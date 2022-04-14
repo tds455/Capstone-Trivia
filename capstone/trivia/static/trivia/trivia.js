@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-
-    // document.querySelector('#newpost-form').addEventListener('submit', create_post);
-
+    try {
     document.getElementById("triviasubmit").addEventListener("click", quizview);
     defaultview()
+    }
+    catch (error) {
+        return
+    }
+
+    
+
     });
 
 // These are currently hardcoded, but they could instead be created from form input
@@ -12,6 +17,7 @@ var alltopics = ["Art", "Animal", "World", "Sports", "Movie"]
 var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
+    document.getElementById("triviasubmit").addEventListener("click", quizview);
     document.querySelector('#defaultview').style.display = 'block';
     document.querySelector('#loadingview').style.display = 'none';
     document.querySelector('#quizview').style.display = 'none';
