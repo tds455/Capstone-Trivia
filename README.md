@@ -15,15 +15,15 @@ I wanted the website to use a combination of Django views to serve important fea
 
 I seperated my views.py file into three categories
 
-**Views**
+####**Views**
 Views provide html templates and values directly from the Django backend.  These are used for the user management views (profile, loginview, logoutview, register), the index page and the about page, which gives a condensed description of the trivia app.<br>
 They also handle accessing /triviagame, but all rendering in done inside trivia.html and trivia.js, and no values are passed from Django.<br>
-**API routes**
+####**API routes**
 Two API routes exist - createquestions and updatescores.
 createquestions will take a POST request containing the information provided by the triviagame form (topics, total questions, fastmode enable) and return the requested questions in JSON format.<br>
 updatescores, upon recieving a GET request, will return the currently logged in user's current score.<br>
 A POST request containing the user's updated rating and score changes will update the Userstats object of the currently logged in user.<br>
-**Objects**
+####**Objects**
 There is one object for each question topic, containing two essential functions - createquestion and format. <br>
 createquestion will make an API call to the public API associated with that topic and return a JSON. <br>
 format will take the contents of the JSON file, parse them and return a dictionary containing a question, answer and all other relevant information.<br>
