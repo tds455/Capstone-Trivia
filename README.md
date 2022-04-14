@@ -8,7 +8,7 @@
 
 ## Distinctiveness and Complexity
 
-<p> Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone/).
+<p> Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone). </p>
 
 ### Technology
 
