@@ -118,7 +118,7 @@ def logoutview(request):
 @csrf_exempt
 @login_required
 def updatescores(request):
-    if request.method == "POST":
+    if request.method == "PUT":
         # Retrieve submitted scores
         data = json.loads(request.body)
 
@@ -218,6 +218,8 @@ def createquestions(request):
   
     else:
         pass
+
+    
 # Objects
 
 class artworkquestion:

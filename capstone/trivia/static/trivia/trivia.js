@@ -480,7 +480,7 @@ function displayscores(ratings, questions, answers, results) {
 
     // Create POST request to update scores, then display new score in top corner
     fetch('/updatescores', {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
             score: ratings[0],
             art: ratings[1],
