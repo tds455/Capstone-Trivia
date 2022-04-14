@@ -11,6 +11,7 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 ### Technology
 
 Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone/), utilising Django for the backend and Javascript for the frontend.  <br>
+However, unlike the other CS50 and CS50W projects, Trivia was an original project with no distribution code or instruction provided.  <br>
 I wanted the website to use a combination of Django views to serve important features (account creation, static pages) while having the actual Trivia app/game be completely responsive, contained within a single .html file. <br>
 
 I seperated my views.py file into three categories
