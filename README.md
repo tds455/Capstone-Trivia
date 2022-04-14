@@ -8,7 +8,7 @@
 
 ## Distinctiveness and Complexity
 
-<p> Trivia was created to match the specification provided by the [Duck Duck Go](https://duckduckgo.com). </p>
+Trivia was created to match the specification provided by the [Duck Duck Go](https://duckduckgo.com).
 
 ### Technology
 
