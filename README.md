@@ -24,6 +24,11 @@ max-height / width and %
 
 ### Caching
 
+id cache
+performance times
+throttling
+CHECK NOTEBOOK
+
 ### Files
 
 #### Views.py
@@ -91,19 +96,11 @@ Contains various HTML elements controlled by Trivia.js, including the initial Tr
 #### profile.html
 #### register.html
 
-
-
-
-### Caching
-
 ### Django models
  
 ## Design
 
 ### Reactive design
-
-### Files
-
 
 
 ### User information and statistics
