@@ -37,6 +37,47 @@ checkvalid will check the JSON is suitable for being used as a question, making 
 createfastquestion will pull an ID from the IDcache model that has previously been used successfully, to avoid having to make random API calls until a viable response is recieved. <br>
 createurl is specific to the artworkquestion object, and constructs an image URL from information provided in the API response. <br>
 
+#### Trivia.js
+
+Trivia.js serves as Trivia's frontend, containing the following functions
+
+##### defaultview
+Called automatically when the DOM has completed loading, defaultview clears all HTML div elements except for #default view, in order to display the form used to set up a new trivia game.
+
+defaultview will also make a GET request to /updatescores, in order to display the user's current total score in the navbar
+
+##### quizview
+quizview is called from the Submit button in the trivia form, and will update views to show a loading screen while the form contents are processed and the backend API is called.
+quizview will validate the form contents, returning an error if requirements are not met, before create a FETCH POST request to /createrequestions.
+
+quizview will call the appropiate function for each returned question, before appending them to the #quizview element inside trivia.html.
+
+#### checkanswers
+checkanswers is called from the submit button inside the quizview element.  It will initialise variables for containing the player's scores, and check the user's submitted answers against those returned from the backend API, which checkanswers takes as it's sole argument.
+
+checkanswers will use .toLowerCase() in it's comparison, to remove case sensitivity from trivia.  
+
+After iterating through the provided answers, checkanswers will call displayscores
+
+#### displayscores
+displayscores takes as arguments the user's submitted answers, the question response from /createquestions and the ratings / results arrays created in checkanswers which detail the rating changes and result for each question.
+
+displayscores will then parse this information and create a html element showing the overall results and change, before creating a further element for each question showing the question, provided answer, correct answer and if the user was correct or not.
+
+A PUT request to /updatescores will then be made.
+
+#### Trivia.html
+
+Contains various HTML elements controlled by Trivia.js, including the initial Trivia form used to create a new quiz.
+
+#### about.html
+#### index.html
+#### layout.html
+#### login.html
+#### profile.html
+#### register.html
+
+
 ### Mobile-responsive
 
 ### Caching
