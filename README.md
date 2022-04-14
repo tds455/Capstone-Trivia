@@ -6,13 +6,23 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Demo
 
-## Distinctiveness and Complexity
+## CS50W - Distinctiveness and Complexity
 
 ### Technology
 
 Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone/), utilising Django for the backend and Javascript for the frontend.  <br>
 However, unlike the other CS50W projects, Trivia was an original project with no distribution code or instruction provided.  <br>
+I wanted to make use of public APIs and create a website that took the data from multiple APIs, parsed and formatted it then presented to the user.  I decided the best way to do this was to make a quiz, or trivia, website that presented 
 I wanted the website to use a combination of Django views to serve important features (account creation, static pages) while having the actual Trivia app/game be completely responsive, contained within a single .html file. <br>
+
+
+### Mobile-responsive
+
+card-deck
+bootstrap
+max-height / width and % 
+
+### Caching
 
 ### Files
 
@@ -48,7 +58,7 @@ defaultview will also make a GET request to /updatescores, in order to display t
 
 ##### quizview
 quizview is called from the Submit button in the trivia form, and will update views to show a loading screen while the form contents are processed and the backend API is called.
-quizview will validate the form contents, returning an error if requirements are not met, before create a FETCH POST request to /createrequestions.
+quizview will validate the form contents, returning an error if requirements are not met, before create a FETCH POST request to /createquestions.
 
 quizview will call the appropiate function for each returned question, before appending them to the #quizview element inside trivia.html.
 
@@ -66,6 +76,10 @@ displayscores will then parse this information and create a html element showing
 
 A PUT request to /updatescores will then be made.
 
+#### TOPICquestion
+trivia.js contains a function for each topic, that will parse the JSON response and create a HTML element containing a formatted question, depending on the type of question requested and the information provided.
+These questions will then be returned to the quizview function
+
 #### Trivia.html
 
 Contains various HTML elements controlled by Trivia.js, including the initial Trivia form used to create a new quiz.
@@ -78,7 +92,7 @@ Contains various HTML elements controlled by Trivia.js, including the initial Tr
 #### register.html
 
 
-### Mobile-responsive
+
 
 ### Caching
 
