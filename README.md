@@ -53,7 +53,7 @@ I also limited the dimensions of images using max-width and max-height attribute
 ## Files
 Please see below for a description of all files I created. <br>
 
-                trivia/
+        trivia/views.py
 
 #### Views.py
 I seperated my views.py file into three categories<br>
@@ -76,7 +76,7 @@ checkvalid will check the JSON is suitable for being used as a question, making 
 createfastquestion will pull an ID from the IDcache model that has previously been used successfully, to avoid having to make random API calls until a viable response is recieved. <br>
 createurl is specific to the artworkquestion object, and constructs an image URL from information provided in the API response. <br>
 
-                trivia/static/trivia
+        trivia/static/trivia.js
 
 #### Trivia.js
 
@@ -111,7 +111,9 @@ A PUT request to /updatescores will then be made to update the user's score and 
 trivia.js contains a function for each topic, that will parse the JSON response and create a HTML element containing a formatted question, depending on the type of question requested and the information provided.
 These questions will then be returned to the quizview function
 
-> trivia/templates
+        trivia/static/styles.css
+
+        trivia/templates
 
 #### Trivia.html
 
