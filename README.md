@@ -6,23 +6,43 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Demo
 
-## CS50W - Distinctiveness and Complexity
+## CS50W - Specification
 
-### Technology
+### Distinctiveness and Complexity
 
 Trivia was created to match the specification provided by the [CS50W Capstone project](https://cs50.harvard.edu/web/2020/projects/final/capstone/), utilising Django for the backend and Javascript for the frontend.  <br>
 However, unlike the other CS50W projects, Trivia was an original project with no distribution code or instruction provided.  <br>
-I wanted to make use of public APIs and create a website that took the data from multiple APIs, parsed and formatted it then presented to the user.  I decided the best way to do this was to make a quiz, or trivia, website that presented 
+I wanted to make use of public APIs and create a website that took the data from multiple APIs, parsed and formatted it then presented to the user.  I decided the best way to do this was to make a quiz or trivia website.
+
+Trivia also uses Django models to cache valid API route subdirectories. <br>  
+While some APIs automatically return a random JSON, others do not, requiring the application to randomly select API routes until it finds a valid one. <br>
+On top of this, the Art Institute of Chicago API has tens of thousands of records, many of which are missing information Trivia requires to create questions. <br>
+Using the IDCache model, Trivia will reconstruct a valid URL requiring only one request to be made for each question when the fastmode setting is enabled. <br>
+When the fastmode setting is disabled, Trivia will store the successful requests inside the IDCache model before returning the questions. <br>
+
 I wanted the website to use a combination of Django views to serve important features (account creation, static pages) while having the actual Trivia app/game be completely responsive, contained within a single .html file. <br>
+While accessing /triviagame, no page reloads will be attempted or required, users can access the full functionality and loop through the quiz multiple times while all the data is display and controlled from trivia.js
 
+#### Caching and models
 
-### Mobile-responsive
+Trivia primarily uses Django models to cache valid API route subdirectories. <br>  
+While some APIs automatically return a random JSON, others do not, requiring the application to randomly select API routes until it finds a valid one. <br>
+On top of this, the Art Institute of Chicago API has tens of thousands of records, many of which are missing information Trivia requires to create questions. <br>
+Using the IDCache model, Trivia will reconstruct a valid URL requiring only one request to be made for each question when the fastmode setting is enabled. <br>
+When the fastmode setting is disabled, Trivia will store the successful requests inside the IDCache model before returning the questions. <br>
+<br>
+Two other models exist - the default User model provided by Django (unmodified), and Userstats, which tracks the user's scores and ratings for each category, as well as the total number of games played.
+<br>
+A user's score can only increase, while ratings will adjust both positively and negatively after each game. <br>
+The user's score will be displayed in the top right corner of the screen while accessing Trivia, while ratings can be found on /profile. <br>
+
+#### Mobile-responsive
 
 card-deck
 bootstrap
 max-height / width and % 
 
-### Caching
+
 
 id cache
 performance times
