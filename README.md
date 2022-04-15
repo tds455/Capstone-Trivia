@@ -145,7 +145,6 @@ login.html - allows users to login <br>
 profile.html - displays the user's profile, scores and ratings, and allows the user to update their password <br>
 register.html - create a new account. <br>
 
-## Additional Information
 
 ## APIs used
 [Art Institute of Chicago](https://api.artic.edu/docs/)<br>
