@@ -6,6 +6,10 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Demo
 
+Trivia is available at https://tshaw.me
+
+Note that site may change over time and trivia may not always be available.
+
 ## Installation and how to run
 
 - Create virtual environment
