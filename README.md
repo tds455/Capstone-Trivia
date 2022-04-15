@@ -113,6 +113,10 @@ These questions will then be returned to the quizview function
 
     trivia/static/styles.css
 
+#### styles.css
+
+Contains css classes used to modify how various elements inside Trivia are displayed.
+
     trivia/templates
 
 #### Trivia.html
