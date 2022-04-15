@@ -8,9 +8,20 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Installation and how to run
 
+- Create virtual environment
+    virtualenv env
 
 - Install requirements
-                pip install -r requirements.txt
+    pip install -r requirements.txt
+
+- Start Django server
+    python manage.py runserver
+
+Note: If hosting a public server or deploying Trivia in a production environment, open 
+
+    capstone/settings.py
+
+And remove the secret key, replacing it with your own
 
 ## CS50W - Specification
 
@@ -55,7 +66,7 @@ Please see below for a description of all files I created. <br>
 
     trivia/views.py
 
-#### Views.py
+#### views.py
 I seperated my views.py file into three categories<br>
 
 ##### **Views**
@@ -78,7 +89,7 @@ createurl is specific to the artworkquestion object, and constructs an image URL
 
     trivia/static/trivia.js
 
-#### Trivia.js
+#### trivia.js
 
 Trivia.js serves as Trivia's frontend, containing the following functions
 
@@ -119,7 +130,7 @@ Contains css classes used to modify how various elements inside Trivia are displ
 
     trivia/templates
 
-#### Trivia.html
+#### trivia.html
 
 Contains various HTML elements controlled by Trivia.js, including the initial Trivia form used to create a new quiz.
 
