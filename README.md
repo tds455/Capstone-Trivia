@@ -9,13 +9,16 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 ## Installation and how to run
 
 - Create virtual environment
-    virtualenv env
+
+        virtualenv env
 
 - Install requirements
-    pip install -r requirements.txt
+
+        pip install -r requirements.txt
 
 - Start Django server
-    python manage.py runserver
+
+        python manage.py runserver
 
 Note: If hosting a public server or deploying Trivia in a production environment, open 
 
