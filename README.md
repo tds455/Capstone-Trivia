@@ -8,6 +8,10 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Installation and how to run
 
+
+- Install requirements
+> pip install -r requirements.txt
+
 ## CS50W - Specification
 
 ### Distinctiveness and Complexity
@@ -46,8 +50,10 @@ I instead used card-columns, intended to be used for cards of various different 
 
 I also limited the dimensions of images using max-width and max-height attributes, allowing images to display at their intended aspect ratio without overflowing the div boundaries and causing display issues.<br>
 
-### Files
+## Files
 Please see below for a description of all files I created. <br>
+
+>trivia/
 
 #### Views.py
 I seperated my views.py file into three categories<br>
@@ -69,6 +75,8 @@ Some objects contain other functions: checkvalid, createfastquestion and createu
 checkvalid will check the JSON is suitable for being used as a question, making sure it contains all the information required. <br>
 createfastquestion will pull an ID from the IDcache model that has previously been used successfully, to avoid having to make random API calls until a viable response is recieved. <br>
 createurl is specific to the artworkquestion object, and constructs an image URL from information provided in the API response. <br>
+
+> trivia/static/trivia
 
 #### Trivia.js
 
@@ -103,6 +111,8 @@ A PUT request to /updatescores will then be made to update the user's score and 
 trivia.js contains a function for each topic, that will parse the JSON response and create a HTML element containing a formatted question, depending on the type of question requested and the information provided.
 These questions will then be returned to the quizview function
 
+> trivia/templates
+
 #### Trivia.html
 
 Contains various HTML elements controlled by Trivia.js, including the initial Trivia form used to create a new quiz.
@@ -114,12 +124,5 @@ layout.html - layout.html is extended into all other html files, and adds the na
 login.html - allows users to login <br>
 profile.html - displays the user's profile, scores and ratings, and allows the user to update their password <br>
 register.html - create a new account. <br>
-
-
-## Requirements
-
-## Installation 
-
-# How to run
 
 # Additional Information
