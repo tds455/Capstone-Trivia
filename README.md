@@ -6,6 +6,8 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Demo
 
+## Installation and how to run
+
 ## CS50W - Specification
 
 ### Distinctiveness and Complexity
@@ -109,18 +111,10 @@ Contains various HTML elements controlled by Trivia.js, including the initial Tr
 about.html - provides a condensed description of trivia<br>
 index.html - serves as a frontpage for trivia, allowing access to all other features<br>
 layout.html - layout.html is extended into all other html files, and adds the navbar and `<head>` <br>
-login.html <br>
-profile.html <br>
-register.html <br>
+login.html - allows users to login <br>
+profile.html - displays the user's profile, scores and ratings, and allows the user to update their password <br>
+register.html - create a new account. <br>
 
-### Django models
- 
-## Design
-
-### Reactive design
-
-
-### User information and statistics
 
 ## Requirements
 
