@@ -35,8 +35,8 @@ However, unlike the other CS50W projects, Trivia was an original project with no
 I wanted to make use of public APIs and create a website that took the data from multiple APIs, parsed and formatted it then presented to the user.  I decided the best way to do this was to make a quiz or trivia website. <br>
 
 
-I wanted the website to use a combination of Django views to serve important features (account creation, static pages) while having the actual Trivia app/game be completely responsive, contained within a single .html file. <br>
-While accessing /triviagame, no page reloads will be attempted or required, users can access the full functionality and loop through the quiz multiple times while all the data is display and controlled from trivia.js
+I wanted the website to use a combination of Django views to serve important features (account creation, static pages) while having the actual Trivia app/game be completely reactive, contained within a single .html file. <br>
+While accessing /triviagame, no page reloads will be attempted or required, users can access the full functionality and loop through the quiz multiple times while all the data is displayed and controlled from trivia.js
 
 #### Caching and models
 
@@ -145,4 +145,11 @@ login.html - allows users to login <br>
 profile.html - displays the user's profile, scores and ratings, and allows the user to update their password <br>
 register.html - create a new account. <br>
 
-# Additional Information
+## Additional Information
+
+## APIs used
+[Art Institute of Chicago](https://api.artic.edu/docs/)
+[Decathlon Sports](https://developers.decathlon.com/sports/)
+[REST Countries](https://restcountries.com/)
+[Zoo Animal API](https://zoo-animal-api.herokuapp.com/)
+[Movie Quote API](https://movie-quote-api.herokuapp.com/)
