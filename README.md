@@ -10,7 +10,7 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 
 - Install requirements
-> pip install -r requirements.txt
+                pip install -r requirements.txt
 
 ## CS50W - Specification
 
@@ -53,7 +53,7 @@ I also limited the dimensions of images using max-width and max-height attribute
 ## Files
 Please see below for a description of all files I created. <br>
 
->trivia/
+                trivia/
 
 #### Views.py
 I seperated my views.py file into three categories<br>
@@ -76,7 +76,7 @@ checkvalid will check the JSON is suitable for being used as a question, making 
 createfastquestion will pull an ID from the IDcache model that has previously been used successfully, to avoid having to make random API calls until a viable response is recieved. <br>
 createurl is specific to the artworkquestion object, and constructs an image URL from information provided in the API response. <br>
 
-> trivia/static/trivia
+                trivia/static/trivia
 
 #### Trivia.js
 
