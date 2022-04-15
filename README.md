@@ -148,8 +148,8 @@ register.html - create a new account. <br>
 ## Additional Information
 
 ## APIs used
-[Art Institute of Chicago](https://api.artic.edu/docs/)
-[Decathlon Sports](https://developers.decathlon.com/sports/)
-[REST Countries](https://restcountries.com/)
-[Zoo Animal API](https://zoo-animal-api.herokuapp.com/)
-[Movie Quote API](https://movie-quote-api.herokuapp.com/)
+[Art Institute of Chicago](https://api.artic.edu/docs/)<br>
+[Decathlon Sports](https://developers.decathlon.com/sports/)<br>
+[REST Countries](https://restcountries.com/)<br>
+[Zoo Animal API](https://zoo-animal-api.herokuapp.com/)<br>
+[Movie Quote API](https://movie-quote-api.herokuapp.com/)<br>
