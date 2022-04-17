@@ -7,15 +7,15 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 - Object-Oriented Programming
 - Reactive design (within /triviagame)
-- Django API
-- Use of Django backend to retrieve data from public APIs, then serve content to a Javascript frontend
+- Django web API
+- Use of Django backend to retrieve data from public APIs which then serves content to a Javascript frontend
 
 
 ## Demo
 
 Trivia is available at https://tshaw.me
 
-Note that site may change over time and trivia may not always be available.
+Note that site may change over time and the trivia app may not always be available.
 
 ## Installation and how to run
 
