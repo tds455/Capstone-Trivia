@@ -39,7 +39,7 @@ And remove the secret key, replacing it with your own
 
 ## CS50W - Specification
 
-**Note - the below section is a detailed overview of the capstone project as required by CS50W. **
+**Note - the below section is a detailed overview of the capstone project as required by CS50W.**
 
 ### Distinctiveness and Complexity
 
