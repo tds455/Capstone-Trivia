@@ -218,6 +218,7 @@ def createquestions(request):
                 question = question.serialise()
                 questions.append(question)
                 
+        # Return list of serialised questions 
         return JsonResponse(questions, safe=False)
   
     else:
