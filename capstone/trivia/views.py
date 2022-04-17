@@ -159,7 +159,7 @@ def createquestions(request):
         data = json.loads(request.body)
         topics = data["topics"]
         totalqs = data["totalqs"]
-        fast = data["fast"]
+        fast = int(data["fast"])
         totalqs = int(totalqs)
 
         # Create list of questions, looping for total number of questions 
@@ -170,15 +170,11 @@ def createquestions(request):
         for x in range(totalqs):
             i = randrange(0, len(topics))
             if topics[i] == "Art":
-                if fast == 1:
-                    question = artworkquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = artworkquestion.createquestion()
-                        contentcheck = artworkquestion.checkvalid(question)
-                question = artworkquestion.format(question, x)
+                question = artworkquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
+                print(question)
 
             if topics[i] == "Sports":
                 if fast == 1:
@@ -213,7 +209,7 @@ def createquestions(request):
                 question = quotequestion.createquestion()
                 question = quotequestion.format(question, x)
                 questions.append(question)
-
+        print(questions)
         return JsonResponse(questions, safe=False)
   
     else:
@@ -223,33 +219,64 @@ def createquestions(request):
 # Objects
 
 class artworkquestion:
+
+    def __init__(self):
+        # Create an empty question
+        self.postid = 0
+        self.url = ""
+        self.category = ""
+        self.type = 0
+        self.title = ""
+        self.year = ""
+        self.country = ""
+        self.artist = ""
+        self.question = ""
+        self.answer = ""
     
-    def createquestion():
-        # Select a random number from 0 to (max)90000 
-        artid = randrange(0, 90000)
-        # Enter id into api call
-        url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def createquestion(self, fast, postid):
+        # To enable fastmode and use cached API routes, pass 1 as an argument with createquestion()
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "art"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://api.artic.edu/api/v1/artworks/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "art"))
+            query = choice(query)
 
-    def checkvalid(json):
+            # Take ID and add it to API call string
+            id = query.APIID
+            url = "https://api.artic.edu/api/v1/artworks/{0}".format(id)
+
+            # Parse and return response
+            response = requests.get(url)
+            json = response.json()
+
+        else:
+            print(fast)
+            contentcheck = 0
+            while contentcheck == 0:    
+                # Select a random number from 0 to (max)90000 (reasonable upper limit for accessing artic API)
+                artid = randrange(0, 90000)
+
+                # Enter id into api call
+                url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
+
+                # Parse response and validate contents
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+
+        # Format object contents into a question.   
+        self.format(json, postid)
+            
+
+    def checkvalid(self, json):        
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
+            # Check artwork has a date of creation
             datestart = json["data"]["date_start"]
         except:
             return 0
         else:
+            # Check artwork has a single date of creation
             if datestart != json["data"]["date_end"]:
                 return 0
             else:
@@ -258,56 +285,69 @@ class artworkquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="art")
                 return 1
 
-    def format(json, id):
-        url = artworkquestion.createurl(json)
+    def format(self, json, postid):
+        url = self.createurl(json)
         choice = randrange(1, 4)
         if choice == 1:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 1,
-                "title" : json["data"]["title"],
-                "year": json["data"]["date_start"],
-                "country": json["data"]["place_of_origin"],
-                "question" : "Which artist painted this artwork",
-                "answer": json["data"]["artist_title"]
-            }
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 1
+            self.title = json["data"]["title"]
+            self.year = json["data"]["date_start"]
+            self.country = json["data"]["place_of_origin"]
+            self.question = "Which artist painted this artwork"
+            self.answer = json["data"]["artist_title"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 2,
-                "title" : json["data"]["title"],
-                "year": json["data"]["date_start"],
-                "artist": json["data"]["artist_title"],
-                "question": "Which country is this artwork from",
-                "answer": json["data"]["place_of_origin"]
-            }
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 2
+            self.title = json["data"]["title"]
+            self.year = json["data"]["date_start"]
+            self.artist = json["data"]["artist_title"]
+            self.question = "Which country is this artwork from"
+            self.answer = json["data"]["place_of_origin"]
 
         if choice == 3:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 3,
-                "title" : json["data"]["title"],
-                "country": json["data"]["place_of_origin"],
-                "artist": json["data"]["artist_title"],
-                "question": "In which year was this artwork painted",
-                "answer": json["data"]["date_start"]
-            }
 
-        return question
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 3
+            self.title = json["data"]["title"]
+            self.country = json["data"]["place_of_origin"]
+            self.artist = json["data"]["artist_title"]
+            self.question = "In which year was this artwork painted"
+            self.answer = json["data"]["date_start"]
+            
 
-    def createurl(json):
+
+    def createurl(self, json):
         iiif = json["config"]["iiif_url"]
         imageid = json["data"]["image_id"]
         suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url
+
+    def serialise(self):
+        # Take current question object and return a dictionary 
+        question = {
+            "number": self.postid,
+            "url": self.url,
+            "category": self.category,
+            "type": self.type,
+            "title": self.title,
+            "country": self.country,
+            "year": self.year,
+            "artist": self.artist,
+            "question": self.question,
+            "answer": self.answer
+        }
+
+        return question
+
 
 class sportsquestion:
 
