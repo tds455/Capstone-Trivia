@@ -3,6 +3,12 @@ Welcome to Trivia, my CS50W final project.<br>
 Trivia is a web application that pulls data from public APIs, parses the responses and formats them into questions.<br>
 Trivia uses a combination of a Python backend running Django and a Javascript frontend to create a responsive, reactive website. <br>
 
+## Key features
+
+- Object-Oriented Programming
+- Reactive design (within /triviagame)
+- Django API
+- Django backend serving a Javascript frontend
 
 ## Demo
 
@@ -31,6 +37,8 @@ Note: If hosting a public server or deploying Trivia in a production environment
 And remove the secret key, replacing it with your own
 
 ## CS50W - Specification
+
+Note - the below section is a detailed overview of the capstone project as required by CS50W.  
 
 ### Distinctiveness and Complexity
 
