@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Add event listener on submit button for form
     try {
     document.getElementById("triviasubmit").addEventListener("click", quizview);
     defaultview()
     }
+    // If adding the event listener is not possible (for example, the user is not logged in) do nothing
     catch (error) {
         return
     }
-
-    
-
     });
 
 // These are currently hardcoded, but they could instead be created from form input
@@ -17,6 +16,7 @@ var alltopics = ["Art", "Animal", "World", "Sports", "Movie"]
 var questionvals = ["0", "0", "0", "0", "0", "6", "9", "12"]
 
 function defaultview() {
+    // Clear views and empty HTML, in case a new game is started
     document.getElementById("triviasubmit").addEventListener("click", quizview);
     document.querySelector('#defaultview').style.display = 'block';
     document.querySelector('#loadingview').style.display = 'none';
@@ -31,12 +31,13 @@ function defaultview() {
     document.querySelector('#scoreview').innerHTML = ``;
     document.querySelector('#resultsbutton').innerHTML = ``;
 
-    // Retrieve and display latest score
+    // Retrieve and display latest score for user
     fetch('/updatescores', {
         method: 'GET',
         })
     .then(response => response.json())
     .then(stats => {
+        // Display on user's navbar
         document.querySelector('#userscore').innerHTML =
         `
             <a class="nav-link">Total score: ${stats['score']}</a>
@@ -107,7 +108,7 @@ function quizview() {
             fast = 0
         }
 
-        // Create POST request
+        // Create POST request using processed information
         fetch('/createquestions', {
             method: 'POST',
             body: JSON.stringify({
@@ -121,7 +122,7 @@ function quizview() {
         .then(questions => {
             questions.forEach(question => {
             quizquestions.push(question)
-
+            // Check category of each question and call appropiate function
             if (question['category'] == "arts") {
                 element = artquestion(question);
             }
@@ -141,6 +142,7 @@ function quizview() {
             document.querySelector('#quizview').appendChild(element);
             });
             })
+        // Append a submit answers button to bottom of form, that calls the checkanswers function
         .then(questions => {
             const submitelement = document.createElement('div');
             submitelement.innerHTML = `
@@ -343,6 +345,7 @@ function quotequestion(question) {
 }
 
 function checkanswers(questions) {
+    // Clear views
     document.querySelector('#defaultview').style.display = 'none';
     document.querySelector('#quizview').style.display = 'none';
     document.querySelector('#loadingview').style.display = 'none';
@@ -351,6 +354,7 @@ function checkanswers(questions) {
     document.querySelector('#quizviewbutton').style.display = 'none';
     document.querySelector('#resultsbutton').style.display = 'block';
 
+    // Take user's answers to questions as input
     let answers = document.getElementById("quizviewform").elements;
 
     // Initialise score and rating values
@@ -361,6 +365,7 @@ function checkanswers(questions) {
     let sportsrating = 0;
     let movierating = 0;
 
+    // Initalise lists that will be passed to displayscores function
     let ratings = [];
     let results = [];
 
@@ -422,15 +427,17 @@ function checkanswers(questions) {
     
     }
 
-    // Call displayscores function to display information in page
+    // Add scores and ratings to list
     ratings.push(score, artrating, sportsrating, worldrating, animalrating, movierating)
+
+    // Call displayscores function to display information in page
     displayscores(ratings, questions, answers, results)
 
 }
 
 function displayscores(ratings, questions, answers, results) {
 
-    // Display scores updates
+    // Display scores updates in HTML element
     const scores = document.createElement('div')
     scores.innerHTML = `
     <div class="container-fluid w-100">
@@ -448,6 +455,7 @@ function displayscores(ratings, questions, answers, results) {
     </div>
     <div class="card-columns">
     `
+    // Add score updates to top of page
     document.querySelector('#scoreview').appendChild(scores);
 
 
@@ -469,6 +477,7 @@ function displayscores(ratings, questions, answers, results) {
         document.querySelector('#resultsview').appendChild(element);
     }
 
+    // Create button to restart Trivia by calling defaultview
     const submitelement = document.createElement('div');
     submitelement.innerHTML = `
     <button class="btn btn-lg btn-block btn-dark" id="resultsback" type="button"> Play again </button>
