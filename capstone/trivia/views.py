@@ -196,9 +196,11 @@ def createquestions(request):
 
             if topics[i] == "Movie":
                 # movie-quote-api includes a rand function, no validity checks or random functions are required
-                question = quotequestion.createquestion()
-                question = quotequestion.format(question, x)
+                question = quotequestion()
+                question.createquestion(x)
+                question = question.serialise()
                 questions.append(question)
+                
         return JsonResponse(questions, safe=False)
   
     else:
@@ -600,40 +602,61 @@ class animalquestion:
         return question
         
         
-        
 class quotequestion:
 
+    def __init__(self):
+        self.postid = 0
+        self.category = "quote"
+        self.type = 0
+        self.movie = ""
+        self.quote = ""
+        self.person = ""
+        self.question = ""
+        self.answer = ""
+
     #movie-quote-api already has a rand function, so checkvalid and random functions are not required
-    def createquestion():
+    def createquestion(self, postid):
         response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
         json = response.json()
-        return json
+        
+        self.format(json, postid)
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 3)
 
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "quote",
-                "type": 1,
-                "movie": json["show"],
-                "quote": json["quote"],
-                "person": json["role"],
-                "question": "In which movie was this quote said?",
-                "answer": json["show"]
-            }
-
+            self.postid = postid,
+            self.type = 1
+            self.movie = json["show"]
+            self.quote = json["quote"]
+            self.person = json["role"]
+            self.question = "In which movie was this quote said?"
+            self.answer = json["show"]
+            
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "quote",
-                "type": 2,
-                "movie": json["show"],
-                "quote": json["quote"],
-                "person": json["role"],
-                "question": "In this movie, which person said this quote",
-                "answer": json["role"]
-            }
+            self.postid = postid,
+            self.type = 2
+            self.movie = json["show"]
+            self.quote = json["quote"]
+            self.person = json["role"]
+            self.question = "In this movie, which person said this quote"
+            self.answer = json["show"]
 
+
+    def serialise(self):
+
+        question = {
+                "number": self.postid,
+                "category": self.category,
+                "type": self.type,
+                "movie": self.movie,
+                "quote": self.quote,
+                "person": self.person,
+                "question": self.question,
+                "answer": self.answer,
+            }
+        
         return question
+
+
+
