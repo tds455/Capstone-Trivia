@@ -18,12 +18,15 @@ def index(request):
     return render(request, "index.html")
 
 def triviagame(request):
+    # Return /triviagame.
     return render(request, "trivia.html")
 
 def about(request):
+    # Return about page
     return render(request, "about.html")
 
 def profileview(request):
+    # Return profile view
     # Get user profile to access ID
     user = request.user
 
@@ -32,15 +35,20 @@ def profileview(request):
         query = Userstats.objects.get(userid=user.id)
         userscores = query.serialise()
     except:
+        # Return unathenticated profile page
         return render(request, "profile.html")
     else:
+        # Return profile page with user stats
         if request.method == "GET":
 
             return render(request, "profile.html", {"userscores": userscores})
         
         if request.method == "POST":
+            # Update userstats
 
             # Check that the testuser is not logged in
+            # Testuser is the sample account for demo usage.
+            # Users should not be able to change it's details
 
             if user.username == "Testuser":
                 return render(request, "profile.html", {"userscores": userscores, "error": "Testuser password cannot be changed"})
@@ -53,6 +61,7 @@ def profileview(request):
             if request.POST["pw"] != request.POST["pwverify"]:
                 return render(request, "profile.html", {"userscores": userscores, "error": "Passwords did not match"})
 
+            # Update user's password and return profile page
             query = User.objects.get(username = user.username)
             query.set_password = request.POST["pw"]
             query.save()
@@ -61,10 +70,12 @@ def profileview(request):
 
 def register(request):
     if request.method == "GET":
+        # Return register page
 
         return render(request, "register.html")
 
     if request.method == "POST":
+        # Process and validate user's input
 
         # Verify Password is above minimum length
         if len(request.POST["pw"]) < 6:
@@ -83,6 +94,7 @@ def register(request):
             user.save()
 
         except:
+            # Return register page with appropiate error message
             return render(request, "register.html", {"error": "Username already taken"})
         else:
             # Log in the user, then create them a stats table
@@ -93,6 +105,7 @@ def register(request):
 
 def loginview(request):
     if request.method == "GET":
+        # Return login page
         return render(request, "login.html")
 
     if request.method == "POST":
@@ -106,6 +119,7 @@ def loginview(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
+            # Return login page with appropiate error message
             return render(request, "login.html", {"error": "Invalid username or password"})
 
 def logoutview(request):
@@ -119,6 +133,8 @@ def logoutview(request):
 @login_required
 def updatescores(request):
     if request.method == "PUT":
+        # Update user's scores
+
         # Retrieve submitted scores
         data = json.loads(request.body)
 
@@ -163,9 +179,10 @@ def createquestions(request):
         totalqs = int(totalqs)
 
         # Create list of questions, looping for total number of questions 
-        # and picking a selected category at random each time
+        # and picking a selected category from user selected topics each time
 
         questions = []
+        # Create list of questions and add each serialised question to the list
 
         for x in range(totalqs):
             i = randrange(0, len(topics))
@@ -266,17 +283,23 @@ class artworkquestion:
         except:
             return 0
         else:
-            # Check artwork has a single date of creation
+            # Check artwork has only single date of creation and not a range
             if datestart != json["data"]["date_end"]:
                 return 0
             else:
-                # Cache successful ID
+                # Cache successful ID inside IDcache model
                 apiID = json["data"]["id"]
                 query = IDcache.objects.get_or_create(APIID=apiID, category="art")
                 return 1
 
     def format(self, json, postid):
+        # Parse JSON contents and store inside object
+
+        # Construct URL from JSON contents 
+        # https://api.artic.edu/docs/#iiif-image-api
         url = self.createurl(json)
+
+        # Randomly select a number to decide question type
         choice = randrange(1, 4)
         if choice == 1:
             self.postid = postid
@@ -315,6 +338,8 @@ class artworkquestion:
 
 
     def createurl(self, json):
+        # https://api.artic.edu/docs/#iiif-image-api
+        # Construct URL from JSON details
         iiif = json["config"]["iiif_url"]
         imageid = json["data"]["image_id"]
         suffix = "/full/300,/0/default.jpg"
@@ -322,7 +347,7 @@ class artworkquestion:
         return url
 
     def serialise(self):
-        # Take current question object and return a dictionary 
+        # Take current question object and return a dictionary
         question = {
             "number": self.postid,
             "url": self.url,
@@ -362,6 +387,7 @@ class sportsquestion:
             json = response.json()
 
         else:
+
             contentcheck = 0
             while contentcheck == 0:
                 # Select a random number from 0 to (max)1000  
@@ -370,6 +396,8 @@ class sportsquestion:
                 url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
                 response = requests.get(url)
                 json = response.json()
+
+                # Validate JSON contents are suitable for formatting into question
                 contentcheck = self.checkvalid(json)
         
         self.format(json, postid)
@@ -421,6 +449,7 @@ class sportsquestion:
             self.answer = json["data"]["attributes"]["name"]
     
     def serialise(self):
+        # Take current question object and return a dictionary
         question = {
             "number": self.postid,
             "category": self.category,
@@ -476,6 +505,7 @@ class countryquestion:
 
     def checkvalid(self, json):
         try:
+            # Check JSON has contains an image URL
             url = json[0]["flags"]["png"]
         except:
             return 0
@@ -489,9 +519,9 @@ class countryquestion:
                 return 1
 
     def format(self, json, postid):
+        # Randomly select a type from 1 to 3
         choice = randrange(1, 4)
 
-        # Which country in REGION speaks LANGUAGE_CODE
         if choice == 1:
             self.postid = postid
             self.url = json[0]["flags"]["png"]
@@ -524,6 +554,7 @@ class countryquestion:
             self.population = json[0]["population"]
             
     def serialise(self):
+        # Take current question object and return a dictionary
         question = {
             "number": self.postid,
             "category": self.category,
@@ -560,6 +591,7 @@ class animalquestion:
         self.format(json, postid)
 
     def format(self, json, postid):
+        # Pick a random value and update object values according to appriopiate question type
         choice = randrange(1, 4)
 
         if choice == 1:
@@ -587,6 +619,7 @@ class animalquestion:
             self.location = json["geo_range"]
             
     def serialise(self):
+        # Take current question object and return a dictionary
         question = {
             "number": self.postid,
             "url": self.url,
@@ -614,7 +647,7 @@ class quotequestion:
         self.question = ""
         self.answer = ""
 
-    #movie-quote-api already has a rand function, so checkvalid and random functions are not required
+    # movie-quote-api already has a rand function, so checkvalid and random functions are not required
     def createquestion(self, postid):
         response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
         json = response.json()
@@ -622,6 +655,7 @@ class quotequestion:
         self.format(json, postid)
 
     def format(self, json, postid):
+        # Take a random value and return one of two questions
         choice = randrange(1, 3)
 
         if choice == 1:
@@ -644,7 +678,7 @@ class quotequestion:
 
 
     def serialise(self):
-
+        # Take current question object and return a dictionary
         question = {
                 "number": self.postid,
                 "category": self.category,
