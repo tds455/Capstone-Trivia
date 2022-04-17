@@ -8,7 +8,8 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 - Object-Oriented Programming
 - Reactive design (within /triviagame)
 - Django API
-- Django backend serving a Javascript frontend
+- Use of Django backend to retrieve data from public APIs, then serve content to a Javascript frontend
+
 
 ## Demo
 
