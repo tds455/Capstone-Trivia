@@ -182,14 +182,9 @@ def createquestions(request):
                 questions.append(question)
 
             if topics[i] == "World":
-                if fast == 1:
-                    question = countryquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = countryquestion.createquestion()
-                        contentcheck = countryquestion.checkvalid(question)
-                question = countryquestion.format(question, x)
+                question = countryquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "Animal":
@@ -437,30 +432,46 @@ class sportsquestion:
         return question
 
 
-
-
 class countryquestion:
-    
-    def createquestion():
-        # Select a random number from 0 to (max)1000  
-        worldid = randrange(1, 1000)
-        # Enter id into api call
-        url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
-        response = requests.get(url)
-        json = response.json()
-        return json
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "country"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://restcountries.com/v2/callingcode/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def __init__(self):
+        self.postid = 0
+        self.category = "world"
+        self.url = ""
+        self.type = 0
+        self.region = ""
+        self.language = ""
+        self.currency = ""
+        self.population = ""
+        self.question = ""
+        self.answer = ""
 
-    def checkvalid(json):
+    def createquestion(self, fast, postid):
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "country"))
+            query = choice(query)
+            id = query.APIID
+            url = "https://restcountries.com/v2/callingcode/{0}".format(id)
+            response = requests.get(url)
+            json = response.json()
+
+        else:
+            # Validate contents of return to ensure they can be formatted into a question
+            contentcheck = 0
+            while contentcheck == 0:
+                # Select a random number from 0 to (max)1000  
+                worldid = randrange(1, 1000)
+                # Enter id into api call
+                url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+        
+        self.format(json, postid)
+
+
+    def checkvalid(self, json):
         try:
             url = json[0]["flags"]["png"]
         except:
@@ -474,49 +485,53 @@ class countryquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="country")
                 return 1
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 4)
 
         # Which country in REGION speaks LANGUAGE_CODE
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 1,
-                "region" : json[0]["region"],
-                "question": "Which country speaks this language",
-                "language" : json[0]["languages"][0]["name"],
-                "answer": json[0]["name"]
-            }
-
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 1
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.language = json[0]["languages"][0]["name"]
+            
 
         # Which country in REGION uses CURRENCY
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 2,
-                "region" : json[0]["region"],
-                "question": "Which country uses this currency",
-                "currency" : json[0]["currencies"][0]["name"],
-                "answer": json[0]["name"]
-            }
-
-
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 2
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.currency = json[0]["currencies"][0]["name"]
+            
 
         # Which country in REGION has population of POPULATION?
         if choice == 3:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 3,
-                "region" : json[0]["region"],
-                "question": "Which country has this population",
-                "population" : json[0]["population"],
-                "answer": json[0]["name"]
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 3
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.population = json[0]["population"]
+            
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "category": self.category,
+            "url": self.url,
+            "type": self.type,
+            "region" : self.region,
+            "question": self.question,
+            "language" : self.language,
+            "currency" : self.currency,
+            "population" : self.population,
+            "answer": self.answer
             }
 
         return question
