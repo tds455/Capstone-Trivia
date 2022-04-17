@@ -189,8 +189,9 @@ def createquestions(request):
 
             if topics[i] == "Animal":
                 # zoo-animal-api includes a rand function, no validity checks or random functions are required
-                question = animalquestion.createquestion()
-                question = animalquestion.format(question, x)
+                question = animalquestion()
+                question.createquestion(x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "Movie":
@@ -538,49 +539,66 @@ class countryquestion:
 
 class animalquestion:
 
+    def __init__(self):
+        self.postid = 0
+        self.url = ""
+        self.category = "animal"
+        self.type = 0
+        self.diet = ""
+        self.habitat = ""
+        self.location = ""
+        self.question = ""
+        self.answer = ""
+
     #zoo-animal-api already has a rand function, so checkvalid and random functions are not required
-    def createquestion():
+    def createquestion(self, postid):
         response = requests.get("https://zoo-animal-api.herokuapp.com/animals/rand")
         json = response.json()
-        return json
+        
+        self.format(json, postid)
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 4)
 
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 1,
-                "diet": json["diet"],
-                "question": "Which animal matches the above picture and has this diet",
-                "answer": json["name"]
-            }
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 1
+            self.question = "Which animal matches the above picture and has this diet"
+            self.answer = json["name"]
+            self.diet = json["diet"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 2,
-                "habitat": json["habitat"],
-                "question": "Which animal matches the above picture and has this habitat",
-                "answer": json["name"]
-            }
-
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 2
+            self.question = "Which animal matches the above picture and has this habitat"
+            self.answer = json["name"]
+            self.habitat = json["habitat"]
+            
         if choice == 3:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 3,
-                "location": json["geo_range"],
-                "question": "Which animal matches the above picture and lives in ",
-                "answer": json["name"]
-            }
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 3
+            self.question = "Which animal matches the above picture and lives in "
+            self.answer = json["name"]
+            self.location = json["geo_range"]
+            
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "url": self.url,
+            "category": self.category,
+            "type": self.type,
+            "diet": self.diet,
+            "habitat": self.habitat,
+            "location": self.location,
+            "question": self.question,
+            "answer": self.answer
+        }
         
         return question
+        
         
         
 class quotequestion:
