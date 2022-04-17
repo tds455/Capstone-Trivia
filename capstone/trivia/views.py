@@ -159,7 +159,7 @@ def createquestions(request):
         data = json.loads(request.body)
         topics = data["topics"]
         totalqs = data["totalqs"]
-        fast = data["fast"]
+        fast = int(data["fast"])
         totalqs = int(totalqs)
 
         # Create list of questions, looping for total number of questions 
@@ -170,50 +170,37 @@ def createquestions(request):
         for x in range(totalqs):
             i = randrange(0, len(topics))
             if topics[i] == "Art":
-                if fast == 1:
-                    question = artworkquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = artworkquestion.createquestion()
-                        contentcheck = artworkquestion.checkvalid(question)
-                question = artworkquestion.format(question, x)
+                question = artworkquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "Sports":
-                if fast == 1:
-                    question = sportsquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = sportsquestion.createquestion()
-                        contentcheck = sportsquestion.checkvalid(question)
-                question = sportsquestion.format(question, x)
+                question = sportsquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "World":
-                if fast == 1:
-                    question = countryquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = countryquestion.createquestion()
-                        contentcheck = countryquestion.checkvalid(question)
-                question = countryquestion.format(question, x)
+                question = countryquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "Animal":
                 # zoo-animal-api includes a rand function, no validity checks or random functions are required
-                question = animalquestion.createquestion()
-                question = animalquestion.format(question, x)
+                question = animalquestion()
+                question.createquestion(x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "Movie":
                 # movie-quote-api includes a rand function, no validity checks or random functions are required
-                question = quotequestion.createquestion()
-                question = quotequestion.format(question, x)
+                question = quotequestion()
+                question.createquestion(x)
+                question = question.serialise()
                 questions.append(question)
-
+                
         return JsonResponse(questions, safe=False)
   
     else:
@@ -223,33 +210,63 @@ def createquestions(request):
 # Objects
 
 class artworkquestion:
+
+    def __init__(self):
+        # Create an empty question
+        self.postid = 0
+        self.url = ""
+        self.category = ""
+        self.type = 0
+        self.title = ""
+        self.year = ""
+        self.country = ""
+        self.artist = ""
+        self.question = ""
+        self.answer = ""
     
-    def createquestion():
-        # Select a random number from 0 to (max)90000 
-        artid = randrange(0, 90000)
-        # Enter id into api call
-        url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def createquestion(self, fast, postid):
+        # To enable fastmode and use cached API routes, pass 1 as an argument with createquestion()
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "art"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://api.artic.edu/api/v1/artworks/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "art"))
+            query = choice(query)
 
-    def checkvalid(json):
+            # Take ID and add it to API call string
+            id = query.APIID
+            url = "https://api.artic.edu/api/v1/artworks/{0}".format(id)
+
+            # Parse and return response
+            response = requests.get(url)
+            json = response.json()
+
+        else:
+            contentcheck = 0
+            while contentcheck == 0:    
+                # Select a random number from 0 to (max)90000 (reasonable upper limit for accessing artic API)
+                artid = randrange(0, 90000)
+
+                # Enter id into api call
+                url = "https://api.artic.edu/api/v1/artworks/{0}".format(artid)
+
+                # Parse response and validate contents
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+
+        # Format object contents into a question.   
+        self.format(json, postid)
+            
+
+    def checkvalid(self, json):        
         #Check the returned json is valid and that the year range is a single number (for question purposes)
         try:
+            # Check artwork has a date of creation
             datestart = json["data"]["date_start"]
         except:
             return 0
         else:
+            # Check artwork has a single date of creation
             if datestart != json["data"]["date_end"]:
                 return 0
             else:
@@ -258,79 +275,106 @@ class artworkquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="art")
                 return 1
 
-    def format(json, id):
-        url = artworkquestion.createurl(json)
+    def format(self, json, postid):
+        url = self.createurl(json)
         choice = randrange(1, 4)
         if choice == 1:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 1,
-                "title" : json["data"]["title"],
-                "year": json["data"]["date_start"],
-                "country": json["data"]["place_of_origin"],
-                "question" : "Which artist painted this artwork",
-                "answer": json["data"]["artist_title"]
-            }
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 1
+            self.title = json["data"]["title"]
+            self.year = json["data"]["date_start"]
+            self.country = json["data"]["place_of_origin"]
+            self.question = "Which artist painted this artwork"
+            self.answer = json["data"]["artist_title"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 2,
-                "title" : json["data"]["title"],
-                "year": json["data"]["date_start"],
-                "artist": json["data"]["artist_title"],
-                "question": "Which country is this artwork from",
-                "answer": json["data"]["place_of_origin"]
-            }
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 2
+            self.title = json["data"]["title"]
+            self.year = json["data"]["date_start"]
+            self.artist = json["data"]["artist_title"]
+            self.question = "Which country is this artwork from"
+            self.answer = json["data"]["place_of_origin"]
 
         if choice == 3:
-            question = {
-                "number": id,
-                "url": url,
-                "category": "arts",
-                "type": 3,
-                "title" : json["data"]["title"],
-                "country": json["data"]["place_of_origin"],
-                "artist": json["data"]["artist_title"],
-                "question": "In which year was this artwork painted",
-                "answer": json["data"]["date_start"]
-            }
 
-        return question
+            self.postid = postid
+            self.url = url
+            self.category = "arts"
+            self.type = 3
+            self.title = json["data"]["title"]
+            self.country = json["data"]["place_of_origin"]
+            self.artist = json["data"]["artist_title"]
+            self.question = "In which year was this artwork painted"
+            self.answer = json["data"]["date_start"]
+            
 
-    def createurl(json):
+
+    def createurl(self, json):
         iiif = json["config"]["iiif_url"]
         imageid = json["data"]["image_id"]
         suffix = "/full/300,/0/default.jpg"
         url = "{0}/{1}{2}".format(iiif, imageid, suffix)
         return url
 
+    def serialise(self):
+        # Take current question object and return a dictionary 
+        question = {
+            "number": self.postid,
+            "url": self.url,
+            "category": self.category,
+            "type": self.type,
+            "title": self.title,
+            "country": self.country,
+            "year": self.year,
+            "artist": self.artist,
+            "question": self.question,
+            "answer": self.answer
+        }
+
+        return question
+
+
 class sportsquestion:
 
-    def createquestion():
-        # Select a random number from 0 to (max)1000  
-        sportid = randrange(1, 200)
-        # Enter id into api call
-        url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def __init__(self):
+        self.postid = 0
+        self.url = ""
+        self.category = "sports"
+        self.type = 0
+        self.title = ""
+        self.description = ""
+        self.question = ""
+        self.answer = ""
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "sports"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://sports.api.decathlon.com/sports/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def createquestion(self, fast, postid):
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "sports"))
+            query = choice(query)
+            id = query.APIID
+            url = "https://sports.api.decathlon.com/sports/{0}".format(id)
+            response = requests.get(url)
+            json = response.json()
 
-    def checkvalid(json):
+        else:
+            contentcheck = 0
+            while contentcheck == 0:
+                # Select a random number from 0 to (max)1000  
+                sportid = randrange(1, 200)
+                # Enter id into api call
+                url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+        
+        self.format(json, postid)
+
+    def checkvalid(self, json):
         try:
             url = json["data"]["attributes"]["icon"]
         except:
@@ -346,64 +390,91 @@ class sportsquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="sports")
                 return 1
 
-    def format(json, id):
-        choice = randrange(1, 3)
-
+    def format(self, json, postid):
+       
         # Strip any instances of the sport name in the description
         description = str(json["data"]["attributes"]["description"])
         title = str(json["data"]["attributes"]["name"])
         description = description.replace(title, "SPORT")
         description = description.replace(title.lower(), "SPORT")
 
+        # Randomly select a question type
+        choice = randrange(1, 3)
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "sports",
-                "url": json["data"]["attributes"]["icon"],
-                "type": 1,
-                "title" : title,
-                "description" : description,
-                "question" : "Based on the picture, what is the name of this sport?",
-                "answer": json["data"]["attributes"]["name"]
-            }
-
+            self.number = postid,
+            self.category = "sports"
+            self.url = json["data"]["attributes"]["icon"]
+            self.type = 1
+            self.title = title,
+            self.description = description,
+            self.question = "Based on the picture, what is the name of this sport?",
+            self.answer = json["data"]["attributes"]["name"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "sports",
-                "url": json["data"]["attributes"]["icon"],
-                "type": 2,
-                "title" : title,
-                "description" : description,
-                "question" : "Based on the description, what is the name of this sport?",
-                "answer": json["data"]["attributes"]["name"]
-            }
+            self.number = postid,
+            self.category = "sports"
+            self.url = json["data"]["attributes"]["icon"]
+            self.type = 2
+            self.title = title,
+            self.description = description,
+            self.question = "Based on the description, what is the name of this sport?",
+            self.answer = json["data"]["attributes"]["name"]
+    
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "category": self.category,
+            "url": self.url,
+            "type": self.type,
+            "title" : self.title,
+            "description" : self.description,
+            "question" : self.question,
+            "answer": self.answer
+        }
 
         return question
 
+
 class countryquestion:
-    
-    def createquestion():
-        # Select a random number from 0 to (max)1000  
-        worldid = randrange(1, 1000)
-        # Enter id into api call
-        url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
-        response = requests.get(url)
-        json = response.json()
-        return json
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "country"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://restcountries.com/v2/callingcode/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def __init__(self):
+        self.postid = 0
+        self.category = "world"
+        self.url = ""
+        self.type = 0
+        self.region = ""
+        self.language = ""
+        self.currency = ""
+        self.population = ""
+        self.question = ""
+        self.answer = ""
 
-    def checkvalid(json):
+    def createquestion(self, fast, postid):
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "country"))
+            query = choice(query)
+            id = query.APIID
+            url = "https://restcountries.com/v2/callingcode/{0}".format(id)
+            response = requests.get(url)
+            json = response.json()
+
+        else:
+            # Validate contents of return to ensure they can be formatted into a question
+            contentcheck = 0
+            while contentcheck == 0:
+                # Select a random number from 0 to (max)1000  
+                worldid = randrange(1, 1000)
+                # Enter id into api call
+                url = "https://restcountries.com/v2/callingcode/{0}".format(worldid)
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+        
+        self.format(json, postid)
+
+
+    def checkvalid(self, json):
         try:
             url = json[0]["flags"]["png"]
         except:
@@ -417,133 +488,175 @@ class countryquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="country")
                 return 1
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 4)
 
         # Which country in REGION speaks LANGUAGE_CODE
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 1,
-                "region" : json[0]["region"],
-                "question": "Which country speaks this language",
-                "language" : json[0]["languages"][0]["name"],
-                "answer": json[0]["name"]
-            }
-
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 1
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.language = json[0]["languages"][0]["name"]
+            
 
         # Which country in REGION uses CURRENCY
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 2,
-                "region" : json[0]["region"],
-                "question": "Which country uses this currency",
-                "currency" : json[0]["currencies"][0]["name"],
-                "answer": json[0]["name"]
-            }
-
-
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 2
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.currency = json[0]["currencies"][0]["name"]
+            
 
         # Which country in REGION has population of POPULATION?
         if choice == 3:
-            question = {
-                "number": id,
-                "category": "world",
-                "url": json[0]["flags"]["png"],
-                "type": 3,
-                "region" : json[0]["region"],
-                "question": "Which country has this population",
-                "population" : json[0]["population"],
-                "answer": json[0]["name"]
+            self.postid = postid
+            self.url = json[0]["flags"]["png"]
+            self.type = 3
+            self.region = json[0]["region"]
+            self.question = "Which country speaks this language"
+            self.answer = json[0]["name"]
+            self.population = json[0]["population"]
+            
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "category": self.category,
+            "url": self.url,
+            "type": self.type,
+            "region" : self.region,
+            "question": self.question,
+            "language" : self.language,
+            "currency" : self.currency,
+            "population" : self.population,
+            "answer": self.answer
             }
 
         return question
 
 class animalquestion:
 
+    def __init__(self):
+        self.postid = 0
+        self.url = ""
+        self.category = "animal"
+        self.type = 0
+        self.diet = ""
+        self.habitat = ""
+        self.location = ""
+        self.question = ""
+        self.answer = ""
+
     #zoo-animal-api already has a rand function, so checkvalid and random functions are not required
-    def createquestion():
+    def createquestion(self, postid):
         response = requests.get("https://zoo-animal-api.herokuapp.com/animals/rand")
         json = response.json()
-        return json
+        
+        self.format(json, postid)
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 4)
 
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 1,
-                "diet": json["diet"],
-                "question": "Which animal matches the above picture and has this diet",
-                "answer": json["name"]
-            }
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 1
+            self.question = "Which animal matches the above picture and has this diet"
+            self.answer = json["name"]
+            self.diet = json["diet"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 2,
-                "habitat": json["habitat"],
-                "question": "Which animal matches the above picture and has this habitat",
-                "answer": json["name"]
-            }
-
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 2
+            self.question = "Which animal matches the above picture and has this habitat"
+            self.answer = json["name"]
+            self.habitat = json["habitat"]
+            
         if choice == 3:
-            question = {
-                "number": id,
-                "category": "animal",
-                "url": json["image_link"],
-                "type": 3,
-                "location": json["geo_range"],
-                "question": "Which animal matches the above picture and lives in ",
-                "answer": json["name"]
-            }
+            self.postid = postid
+            self.url = json["image_link"]
+            self.type = 3
+            self.question = "Which animal matches the above picture and lives in "
+            self.answer = json["name"]
+            self.location = json["geo_range"]
+            
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "url": self.url,
+            "category": self.category,
+            "type": self.type,
+            "diet": self.diet,
+            "habitat": self.habitat,
+            "location": self.location,
+            "question": self.question,
+            "answer": self.answer
+        }
         
         return question
         
         
 class quotequestion:
 
+    def __init__(self):
+        self.postid = 0
+        self.category = "quote"
+        self.type = 0
+        self.movie = ""
+        self.quote = ""
+        self.person = ""
+        self.question = ""
+        self.answer = ""
+
     #movie-quote-api already has a rand function, so checkvalid and random functions are not required
-    def createquestion():
+    def createquestion(self, postid):
         response = requests.get("https://movie-quote-api.herokuapp.com/v1/quote/?censored")
         json = response.json()
-        return json
+        
+        self.format(json, postid)
 
-    def format(json, id):
+    def format(self, json, postid):
         choice = randrange(1, 3)
 
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "quote",
-                "type": 1,
-                "movie": json["show"],
-                "quote": json["quote"],
-                "person": json["role"],
-                "question": "In which movie was this quote said?",
-                "answer": json["show"]
-            }
-
+            self.postid = postid,
+            self.type = 1
+            self.movie = json["show"]
+            self.quote = json["quote"]
+            self.person = json["role"]
+            self.question = "In which movie was this quote said?"
+            self.answer = json["show"]
+            
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "quote",
-                "type": 2,
-                "movie": json["show"],
-                "quote": json["quote"],
-                "person": json["role"],
-                "question": "In this movie, which person said this quote",
-                "answer": json["role"]
-            }
+            self.postid = postid,
+            self.type = 2
+            self.movie = json["show"]
+            self.quote = json["quote"]
+            self.person = json["role"]
+            self.question = "In this movie, which person said this quote"
+            self.answer = json["show"]
 
+
+    def serialise(self):
+
+        question = {
+                "number": self.postid,
+                "category": self.category,
+                "type": self.type,
+                "movie": self.movie,
+                "quote": self.quote,
+                "person": self.person,
+                "question": self.question,
+                "answer": self.answer,
+            }
+        
         return question
+
+
+
