@@ -416,7 +416,7 @@ class sportsquestion:
             self.number = postid,
             self.category = "sports"
             self.url = json["data"]["attributes"]["icon"]
-            self.type = 1
+            self.type = 2
             self.title = title,
             self.description = description,
             self.question = "Based on the description, what is the name of this sport?",
