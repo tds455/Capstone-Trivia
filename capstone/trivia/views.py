@@ -174,17 +174,11 @@ def createquestions(request):
                 question.createquestion(fast, x)
                 question = question.serialise()
                 questions.append(question)
-                print(question)
 
             if topics[i] == "Sports":
-                if fast == 1:
-                    question = sportsquestion.createfastquestion()
-                else:
-                    contentcheck = 0
-                    while contentcheck == 0:
-                        question = sportsquestion.createquestion()
-                        contentcheck = sportsquestion.checkvalid(question)
-                question = sportsquestion.format(question, x)
+                question = sportsquestion()
+                question.createquestion(fast, x)
+                question = question.serialise()
                 questions.append(question)
 
             if topics[i] == "World":
@@ -209,7 +203,6 @@ def createquestions(request):
                 question = quotequestion.createquestion()
                 question = quotequestion.format(question, x)
                 questions.append(question)
-        print(questions)
         return JsonResponse(questions, safe=False)
   
     else:
@@ -250,7 +243,6 @@ class artworkquestion:
             json = response.json()
 
         else:
-            print(fast)
             contentcheck = 0
             while contentcheck == 0:    
                 # Select a random number from 0 to (max)90000 (reasonable upper limit for accessing artic API)
@@ -351,26 +343,40 @@ class artworkquestion:
 
 class sportsquestion:
 
-    def createquestion():
-        # Select a random number from 0 to (max)1000  
-        sportid = randrange(1, 200)
-        # Enter id into api call
-        url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def __init__(self):
+        self.postid = 0
+        self.url = ""
+        self.category = "sports"
+        self.type = 0
+        self.title = ""
+        self.description = ""
+        self.question = ""
+        self.answer = ""
 
-    def createfastquestion():
-        # Take a random url from the IDCache model
-        query = list(IDcache.objects.filter(category = "sports"))
-        query = choice(query)
-        id = query.APIID
-        url = "https://sports.api.decathlon.com/sports/{0}".format(id)
-        response = requests.get(url)
-        json = response.json()
-        return json
+    def createquestion(self, fast, postid):
+        if fast == 1:
+            # Take a random url from the IDCache model
+            query = list(IDcache.objects.filter(category = "sports"))
+            query = choice(query)
+            id = query.APIID
+            url = "https://sports.api.decathlon.com/sports/{0}".format(id)
+            response = requests.get(url)
+            json = response.json()
 
-    def checkvalid(json):
+        else:
+            contentcheck = 0
+            while contentcheck == 0:
+                # Select a random number from 0 to (max)1000  
+                sportid = randrange(1, 200)
+                # Enter id into api call
+                url = "https://sports.api.decathlon.com/sports/{0}".format(sportid)
+                response = requests.get(url)
+                json = response.json()
+                contentcheck = self.checkvalid(json)
+        
+        self.format(json, postid)
+
+    def checkvalid(self, json):
         try:
             url = json["data"]["attributes"]["icon"]
         except:
@@ -386,41 +392,52 @@ class sportsquestion:
                 query = IDcache.objects.get_or_create(APIID=apiID, category="sports")
                 return 1
 
-    def format(json, id):
-        choice = randrange(1, 3)
-
+    def format(self, json, postid):
+       
         # Strip any instances of the sport name in the description
         description = str(json["data"]["attributes"]["description"])
         title = str(json["data"]["attributes"]["name"])
         description = description.replace(title, "SPORT")
         description = description.replace(title.lower(), "SPORT")
 
+        # Randomly select a question type
+        choice = randrange(1, 3)
         if choice == 1:
-            question = {
-                "number": id,
-                "category": "sports",
-                "url": json["data"]["attributes"]["icon"],
-                "type": 1,
-                "title" : title,
-                "description" : description,
-                "question" : "Based on the picture, what is the name of this sport?",
-                "answer": json["data"]["attributes"]["name"]
-            }
-
+            self.number = postid,
+            self.category = "sports"
+            self.url = json["data"]["attributes"]["icon"]
+            self.type = 1
+            self.title = title,
+            self.description = description,
+            self.question = "Based on the picture, what is the name of this sport?",
+            self.answer = json["data"]["attributes"]["name"]
 
         if choice == 2:
-            question = {
-                "number": id,
-                "category": "sports",
-                "url": json["data"]["attributes"]["icon"],
-                "type": 2,
-                "title" : title,
-                "description" : description,
-                "question" : "Based on the description, what is the name of this sport?",
-                "answer": json["data"]["attributes"]["name"]
-            }
+            self.number = postid,
+            self.category = "sports"
+            self.url = json["data"]["attributes"]["icon"]
+            self.type = 1
+            self.title = title,
+            self.description = description,
+            self.question = "Based on the description, what is the name of this sport?",
+            self.answer = json["data"]["attributes"]["name"]
+    
+    def serialise(self):
+        question = {
+            "number": self.postid,
+            "category": self.category,
+            "url": self.url,
+            "type": self.type,
+            "title" : self.title,
+            "description" : self.description,
+            "question" : self.question,
+            "answer": self.answer
+        }
 
         return question
+
+
+
 
 class countryquestion:
     
