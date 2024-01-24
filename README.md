@@ -14,7 +14,7 @@ Trivia uses a combination of a Python backend running Django and a Javascript fr
 
 ## Demo
 
-Trivia is available at https://tshaw.me
+~~ Trivia is available at https://tshaw.me ~~  Website is unavailable while I work on different projects
 
 Trivia is self-hosted on an AWS EC2 instance running Ubuntu and Apache
 
